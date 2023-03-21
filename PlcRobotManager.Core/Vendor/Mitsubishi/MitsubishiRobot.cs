@@ -78,7 +78,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         /// </summary>
         private readonly IPlcDataGatherer _plcDataReader;
 
-        public MitsubishiRobot(string name, IMitsubishiPlc plc, DataGathererType dataReaderType, IEnumerable<DeviceLabel> deviceLabels)
+        public MitsubishiRobot(string name, IMitsubishiPlc plc, DataGathererType dataGathererType, IEnumerable<DeviceLabel> deviceLabels)
         {
             if(deviceLabels == null) throw new ArgumentNullException(nameof(deviceLabels));
 
@@ -88,10 +88,18 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
 
             _deviceLabels.AddRange(deviceLabels);
 
-            if (dataReaderType == DataGathererType.Random)
-                _plcDataReader = new RandomDataGatherer(_plc, deviceLabels);
-            else
-                _plcDataReader = new AutoDataGatherer(plc, deviceLabels);
+            switch (dataGathererType)
+            {
+                case DataGathererType.Auto:
+                    _plcDataReader = new AutoDataGatherer(plc, deviceLabels);break;
+                case DataGathererType.Random:
+                    _plcDataReader = new RandomDataGatherer(plc, deviceLabels); break;
+                case DataGathererType.Manual:
+                    _plcDataReader = new ManualGatherer(plc, deviceLabels); break;
+                default:
+                    throw new ArgumentException(nameof(dataGathererType));
+
+            }
 
         }
 

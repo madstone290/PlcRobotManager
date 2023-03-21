@@ -2,6 +2,7 @@
 using PlcRobotManager.Core.Vendor.Mitsubishi;
 using System;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Threading.Tasks;
 
 namespace PlcRobotManager.Core
@@ -19,13 +20,29 @@ namespace PlcRobotManager.Core
                 ActTargetSimulator = 1
             });
 
-            var dLabels = Enumerable.Range(0, 300).Select(i => new DeviceLabel(Device.D, i * 2));
-            var mLabels = Enumerable.Range(0, 300).Select(i => new DeviceLabel(Device.M, i * 2));
-            var xLabels = Enumerable.Range(0, 50).Select(i => new DeviceLabel(Device.X, i * 2));
-            var yLabels = Enumerable.Range(0, 50).Select(i => new DeviceLabel(Device.Y, i * 2));
-            var allLabels = dLabels.Concat(mLabels).Concat(xLabels).Concat(yLabels).ToList();
+            //var dLabels = Enumerable.Range(0, 300).Select(i => new DeviceLabel(Device.D, i * 2));
+            //var mLabels = Enumerable.Range(0, 300).Select(i => new DeviceLabel(Device.M, i * 2));
+            //var xLabels = Enumerable.Range(0, 50).Select(i => new DeviceLabel(Device.X, i * 2));
+            //var yLabels = Enumerable.Range(0, 50).Select(i => new DeviceLabel(Device.Y, i * 2));
+            //var allLabels = dLabels.Concat(mLabels).Concat(xLabels).Concat(yLabels).ToList();
 
-            var robots = Enumerable.Range(1, robotCount).Select(x => new MitsubishiRobot(x.ToString(), mitsubishiPlc, DataGathererType.Auto, allLabels)
+            GatheringGroup group1 = new GatheringGroup("블록1", RangeType.Block);
+            GatheringGroup group2 = new GatheringGroup("블록2", RangeType.Block);
+            GatheringGroup group3 = new GatheringGroup("블록3", RangeType.Block);
+            GatheringGroup group4 = new GatheringGroup("랜덤1", RangeType.Random);
+            var groupLabels1 = Enumerable.Range(0, 200).Select(i => new DeviceLabel(Device.D, i * 2, group1));
+            var groupLabels2 = Enumerable.Range(0, 200).Select(i => new DeviceLabel(Device.X, i * 2, group2));
+            var groupLabels3 = Enumerable.Range(0, 200).Select(i => new DeviceLabel(Device.Y, i * 2, group3));
+            var groupLabels4 = Enumerable.Range(0, 200).Select(i =>
+            {
+                if(i % 2 == 0)
+                    return new DeviceLabel(Device.M, i * 2, group4);
+                else
+                    return new DeviceLabel(Device.L, i * 2, group4);
+            });
+            var allLabels = groupLabels1.Concat(groupLabels2).Concat(groupLabels3).Concat(groupLabels4).ToList();
+
+            var robots = Enumerable.Range(1, robotCount).Select(x => new MitsubishiRobot(x.ToString(), mitsubishiPlc, DataGathererType.Manual, allLabels)
             {
                 AdditionalIdleTime = 1000,
                 DataLoggingEnabled = true,

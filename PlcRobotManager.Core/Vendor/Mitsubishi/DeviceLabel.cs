@@ -5,11 +5,12 @@
     /// </summary>
     public class DeviceLabel
     {
-        public DeviceLabel(Device device, int address)
+        public DeviceLabel(Device device, int address, GatheringGroup group = null)
         {
             Device = device;
             Address = address;
             AddressString = GetAddressString();
+            Group = group;
         }
 
         /// <summary>
@@ -23,6 +24,12 @@
         public int Address { get; }
 
         public string AddressString { get; }
+
+        /// <summary>
+        /// 수집 그룹. 매뉴얼 방식으로 데이터를 수집할 때 적용된다.
+        /// </summary>
+        public GatheringGroup Group { get; }
+
 
         private string GetAddressString()
         {
