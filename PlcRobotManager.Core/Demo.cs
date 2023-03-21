@@ -35,14 +35,15 @@ namespace PlcRobotManager.Core
             var groupLabels3 = Enumerable.Range(0, 200).Select(i => new DeviceLabel(Device.Y, i * 2, group3));
             var groupLabels4 = Enumerable.Range(0, 200).Select(i =>
             {
-                if(i % 2 == 0)
-                    return new DeviceLabel(Device.M, i * 2, group4);
-                else
-                    return new DeviceLabel(Device.L, i * 2, group4);
+                return new DeviceLabel(Device.M, i * 2, group4);
+                //if (i % 2 == 0)
+                //    return new DeviceLabel(Device.M, i * 2, group4);
+                //else
+                //    return new DeviceLabel(Device.L, i * 2, group4);
             });
             var allLabels = groupLabels1.Concat(groupLabels2).Concat(groupLabels3).Concat(groupLabels4).ToList();
 
-            var robots = Enumerable.Range(1, robotCount).Select(x => new MitsubishiRobot(x.ToString(), mitsubishiPlc, DataGathererType.Manual, allLabels)
+            var robots = Enumerable.Range(1, robotCount).Select(x => new MitsubishiRobot(x.ToString(), mitsubishiPlc, DataGathererType.Auto, allLabels)
             {
                 AdditionalIdleTime = 1000,
                 DataLoggingEnabled = true,

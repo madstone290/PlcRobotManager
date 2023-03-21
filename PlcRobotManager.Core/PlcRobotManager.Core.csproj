@@ -69,6 +69,7 @@
     <Compile Include="Vendor\Mitsubishi\DeviceLabel.cs" />
     <Compile Include="Vendor\Mitsubishi\DeviceType.cs" />
     <Compile Include="Vendor\Mitsubishi\Gatherers\AutoDataGatherer.cs" />
+    <Compile Include="Vendor\Mitsubishi\Gatherers\BaseGatherer.cs" />
     <Compile Include="Vendor\Mitsubishi\Gatherers\ManualGatherer.cs" />
     <Compile Include="Vendor\Mitsubishi\Gatherers\RandomDataGatherer.cs" />
     <Compile Include="Vendor\Mitsubishi\GatheringGroup.cs" />
