@@ -52,6 +52,7 @@
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlockRangeTests.cs" />
     <Compile Include="Mockups\PlcMockup.cs" />
     <Compile Include="AutoDataGathererSortTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

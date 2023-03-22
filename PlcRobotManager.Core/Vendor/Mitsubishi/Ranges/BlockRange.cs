@@ -18,14 +18,20 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
             OrderedDeviceLabels = deviceLabels.OrderBy(x => x.Address);
             IsBitBlock = deviceLabels.First().Device.IsBit();
 
-            Tuple<DeviceLabel, int> startAndLength;
-            if (IsBitBlock)
-                startAndLength = InitBitBlockRange(deviceLabels);
-            else
-                startAndLength = InitWordBlockRange(deviceLabels);
 
-            Start = startAndLength.Item1;
-            Length = startAndLength.Item2;
+            if (IsBitBlock)
+            {
+                var tuple = InitBitBlockRange(deviceLabels);
+                Start = tuple.Item1;
+                Length = tuple.Item2;
+            }
+            else
+            {
+                var tuple = InitWordBlockRange(deviceLabels);
+                Start = tuple.Item1;
+                Length = tuple.Item2;
+            }
+
         }
 
         /// <summary>
@@ -34,12 +40,13 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
         public IEnumerable<DeviceLabel> OrderedDeviceLabels { get; }
 
         /// <summary>
-        /// 시작 디바이스
+        /// 시작 디바이스. 실제 필요한 라벨과 다를 수 있다.
+        /// 비트라벨인 경우 2바이트 단위로 수행되는 블록읽기의 특성으로 인해 시작비트라벨을 생성하는 경우가 있다.
         /// </summary>
         public DeviceLabel Start { get; }
 
         /// <summary>
-        /// 길이
+        /// 워드단위 길이.
         /// </summary>
         public int Length { get; }
 
@@ -57,7 +64,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
         {
             DeviceLabel min = orderedLabels.First();
             DeviceLabel max = orderedLabels.Last();
-            
+
             DeviceLabel start = min;
             int length = max.Address - min.Address + 1;
 
@@ -75,18 +82,14 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
             DeviceLabel min = orderedLabels.First();
             DeviceLabel max = orderedLabels.Last();
 
-            if (min.Address % 16 != 0) throw new Exception("비트블록의 시작주소는 16의 배수여야 합니다");
-
-            DeviceLabel start = min;
-            int length;
-            if (max.Address % 16 == 0)
-                length = max.Address / 16;
-            else
-                length = (max.Address / 16) + 1;
+            int startWordAddress = min.Address / 16;
+            int endWordAddress = max.Address / 16;
+            int length = endWordAddress - startWordAddress + 1;
+            DeviceLabel start = new DeviceLabel(min.Device, startWordAddress, min.Group);
 
             return Tuple.Create(start, length);
         }
 
-        
+
     }
 }

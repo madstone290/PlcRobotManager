@@ -28,7 +28,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Readers
                 return Result<Dictionary<string, short>>.Fail(result.Message);
 
             Dictionary<string, short> data = new Dictionary<string, short>();
-            int startAddress = blockRange.OrderedDeviceLabels.First().Address;
+            int startAddress = blockRange.Start.Address;
 
             foreach(var label in blockRange.OrderedDeviceLabels)
             {

@@ -35,11 +35,12 @@ namespace PlcRobotManager.Core
             var groupLabels3 = Enumerable.Range(0, 200).Select(i => new DeviceLabel(Device.Y, i * 2, group3));
             var groupLabels4 = Enumerable.Range(0, 200).Select(i =>
             {
-                return new DeviceLabel(Device.M, i * 2, group4);
-                //if (i % 2 == 0)
-                //    return new DeviceLabel(Device.M, i * 2, group4);
-                //else
-                //    return new DeviceLabel(Device.L, i * 2, group4);
+                if (i % 3 == 0)
+                    return new DeviceLabel(Device.M, i * 3, group4);
+                else if(i % 3 == 1)
+                    return new DeviceLabel(Device.L, i * 3, group4);
+                else
+                    return new DeviceLabel(Device.Y, i * 3, group4);
             });
             var allLabels = groupLabels1.Concat(groupLabels2).Concat(groupLabels3).Concat(groupLabels4).ToList();
 
