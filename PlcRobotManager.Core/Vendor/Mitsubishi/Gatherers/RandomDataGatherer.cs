@@ -18,10 +18,26 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         /// </summary>
         private readonly List<DeviceLabel> _deviceLabels = new List<DeviceLabel>();
 
+        private readonly List<RandomRange> _randomRanges = new List<RandomRange>();
+
         /// <summary>
         /// 한번에 읽어올 디바이스 개수
         /// </summary>
         private int _readLength = 100;
+
+        public RandomDataGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels) : base(plc)
+        {
+            _deviceLabels.AddRange(deviceLabels.OrderBy(x => x.AddressString));
+
+            int taken = 0;
+            while (taken < _deviceLabels.Count)
+            {
+                int toTake = Math.Min(_deviceLabels.Count - taken, ReadLength);
+                _randomRanges.Add(new RandomRange(_deviceLabels.Skip(taken).Take(toTake)));
+
+                taken += toTake;
+            }
+        }
 
         /// <summary>
         /// 한번에 읽어올 디바이스 개수
@@ -38,19 +54,9 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             }
         }
 
-        public RandomDataGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels) : base(plc)
-        {
-            _deviceLabels.AddRange(deviceLabels.OrderBy(x => x.AddressString));
+        public override IEnumerable<BlockRange> BlockRanges => Enumerable.Empty<BlockRange>();
 
-            int taken = 0;
-            while (taken < _deviceLabels.Count)
-            {
-                int toTake = Math.Min(_deviceLabels.Count - taken, ReadLength);
-                _randomRanges.Add(new RandomRange(_deviceLabels.Skip(taken).Take(toTake)));
-
-                taken += toTake;
-            }
-        }
+        public override IEnumerable<RandomRange> RandomRanges => _randomRanges;
 
     }
 }

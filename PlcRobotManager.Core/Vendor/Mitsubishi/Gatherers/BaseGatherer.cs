@@ -30,12 +30,12 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         /// <summary>
         /// 블록읽기 목록
         /// </summary>
-        protected readonly List<BlockRange> _blockRanges = new List<BlockRange>();
+        public abstract IEnumerable<BlockRange> BlockRanges { get; }
 
         /// <summary>
         /// 랜덤읽기 범위
         /// </summary>
-        protected readonly List<RandomRange> _randomRanges = new List<RandomRange>();
+        public abstract IEnumerable<RandomRange> RandomRanges { get; }
 
         public BaseGatherer(IMitsubishiPlc plc)
         {
@@ -50,7 +50,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             Dictionary<string, short> data = new Dictionary<string, short>();
 
             #region 블록읽기
-            foreach (var blockRange in _blockRanges)
+            foreach (var blockRange in BlockRanges)
             {
                 Result<Dictionary<string, short>> readResult;
                 if (blockRange.IsBitBlock)
@@ -68,7 +68,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             #endregion
 
             #region 랜덤읽기
-            foreach (var randomRange in _randomRanges)
+            foreach (var randomRange in RandomRanges)
             {
                 var result = _randomReader.ReadRandom(randomRange);
                 if (!result.IsSuccessful)

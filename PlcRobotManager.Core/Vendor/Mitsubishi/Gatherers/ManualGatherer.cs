@@ -18,6 +18,10 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         /// </summary>
         private readonly Dictionary<GatheringGroup, List<DeviceLabel>> _gatheringGroups = new Dictionary<GatheringGroup, List<DeviceLabel>>();
 
+        private readonly List<BlockRange> _blockRanges = new List<BlockRange>();
+
+        private readonly List<RandomRange> _randomRanges = new List<RandomRange>();
+
         public ManualGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels) : base(plc)
         {
             var labelGroups = deviceLabels.GroupBy(x => x.Group);
@@ -32,6 +36,11 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
                     _randomRanges.Add(new RandomRange(labelGroup));
             }
         }
+
+
+        public override IEnumerable<BlockRange> BlockRanges => _blockRanges;
+
+        public override IEnumerable<RandomRange> RandomRanges => _randomRanges;
 
     }
 }

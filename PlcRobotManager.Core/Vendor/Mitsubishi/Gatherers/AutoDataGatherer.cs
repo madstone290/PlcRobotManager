@@ -11,6 +11,45 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
     /// </summary>
     public class AutoDataGatherer : BaseGatherer
     {
+        
+        /// <summary>
+        /// 디바이스 목록
+        /// </summary>
+        private readonly List<DeviceLabel> _deviceLabels = new List<DeviceLabel>();
+
+        private readonly List<BlockRange> _blockRanges = new List<BlockRange>();
+
+        private readonly List<RandomRange> _randomRanges= new List<RandomRange>();
+
+
+        public AutoDataGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels)
+            : base(plc)
+        {
+            _deviceLabels.AddRange(deviceLabels.OrderBy(x => x.AddressString));
+
+            // 디바이스기준으로 분류한 다음 개수에 따라 블록읽기와 랜덤읽기로 나눈다.
+            var sorter = new Sorter();
+            var ranges = sorter.Sort(deviceLabels);
+
+            _blockRanges.AddRange(ranges.Item1);
+            _randomRanges.AddRange(ranges.Item2);
+        }
+
+        /// <summary>
+        /// 블록읽기 최대크기
+        /// </summary>
+        public int MaxBlockSize { get; set; } = 1000;
+
+        /// <summary>
+        /// 최소 라벨개수.블록에 이보다 작은 라벨이 존재하면 랜덤읽기로 데이터를 불러온다.
+        /// </summary>
+        public int MinLabelCount { get; set; } = 30;
+
+        public override IEnumerable<BlockRange> BlockRanges => _blockRanges;
+
+        public override IEnumerable<RandomRange> RandomRanges => _randomRanges;
+
+
         /// <summary>
         /// 데이터 수집에 사용할 라벨을 분류한다.
         /// </summary>
@@ -41,7 +80,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
                     }
 
                     List<List<DeviceLabel>> blockGroups = DivideByMaxBlockSize(group, maxBlockSize); // 최대 블록크기에 맞춰 2차 분류
-                    foreach(var blockGroup in blockGroups)
+                    foreach (var blockGroup in blockGroups)
                     {
                         if (blockGroup.Count() < minLabelCount)
                             randomLabels.AddRange(blockGroup);
@@ -51,7 +90,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 
                 }
 
-                if(randomLabels.Any())
+                if (randomLabels.Any())
                     randomRanges.Add(new RandomRange(randomLabels));
 
                 return new Tuple<List<BlockRange>, List<RandomRange>>(blockRanges, randomRanges);
@@ -64,15 +103,15 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             /// <param name="maxBlockSize"></param>
             /// <returns></returns>
             private List<List<DeviceLabel>> DivideByMaxBlockSize(IEnumerable<DeviceLabel> deviceLabels, int maxBlockSize)
-            { 
+            {
                 List<List<DeviceLabel>> blockGroups = new List<List<DeviceLabel>>();
                 IEnumerable<DeviceLabel> orderedLabels = deviceLabels.OrderBy(x => x.Address);
 
                 int startAddress = orderedLabels.First().Address;
                 int endAddress = orderedLabels.Last().Address;
                 int remainingBlockSize = endAddress - startAddress + 1;
-                    
-                while(0 < remainingBlockSize)
+
+                while (0 < remainingBlockSize)
                 {
                     int actBlockSize = Math.Min(remainingBlockSize, maxBlockSize);
                     blockGroups.Add(orderedLabels.Take(actBlockSize).ToList());
@@ -82,35 +121,6 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 
                 return blockGroups;
             }
-        }
-
-        /// <summary>
-        /// 디바이스 목록
-        /// </summary>
-        private readonly List<DeviceLabel> _deviceLabels = new List<DeviceLabel>();
-
-        /// <summary>
-        /// 블록읽기 최대크기
-        /// </summary>
-        public int MaxBlockSize { get; set; } = 1000;
-
-        /// <summary>
-        /// 최소 라벨개수.블록에 이보다 작은 라벨이 존재하면 랜덤읽기로 데이터를 불러온다.
-        /// </summary>
-        public int MinLabelCount { get; set; } = 30;
-
-
-        public AutoDataGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels)
-            : base(plc)
-        {
-            _deviceLabels.AddRange(deviceLabels.OrderBy(x => x.AddressString));
-
-            // 디바이스기준으로 분류한 다음 개수에 따라 블록읽기와 랜덤읽기로 나눈다.
-            var sorter = new Sorter();
-            var ranges = sorter.Sort(deviceLabels);
-
-            _blockRanges.AddRange(ranges.Item1);
-            _randomRanges.AddRange(ranges.Item2);
         }
 
     }
