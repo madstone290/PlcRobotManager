@@ -39,7 +39,7 @@ namespace PlcRobotManager.Core.UnitTests
             Tuple<List<BlockRange>, List<RandomRange>> ranges = sorter.Sort(labels, maxBlockSize, minLabelCount);
 
             ranges.Item1.Should().HaveCount(1);
-            ranges.Item1.First().Start.Address.Should().Be(startAddress);
+            ranges.Item1.First().StartAddress.Should().Be(startAddress);
             if (ranges.Item1.First().IsBitBlock)
                 ranges.Item1.First().Length.Should().Be((count - 1) / 16 + 1);
             else
@@ -80,7 +80,7 @@ namespace PlcRobotManager.Core.UnitTests
 
             for (int i = 0; i < devices.Length; i++)
             {
-                var deviceRanges = ranges.Item1.Where(x => x.Start.Device == Device.FromName(devices[i]));
+                var deviceRanges = ranges.Item1.Where(x => x.Device == Device.FromName(devices[i]));
                 deviceRanges.Count().Should().Be(expBlockCount[i]);
 
                 int remaining = count[i];

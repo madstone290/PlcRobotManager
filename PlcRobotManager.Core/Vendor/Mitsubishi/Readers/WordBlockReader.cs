@@ -22,7 +22,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Readers
             if (blockRange == null) throw new ArgumentNullException(nameof(blockRange));
             if (blockRange.IsBitBlock) throw new ArgumentException("워드블록이 아닙니다");
 
-            var result = _plc.ReadBlock2(blockRange.Start.AddressString, blockRange.Length);
+            var result = _plc.ReadBlock2(blockRange.StartAddressString, blockRange.Length);
 
             if (!result.IsSuccessful)
                 return Result<Dictionary<string, short>>.Fail(result.Message);

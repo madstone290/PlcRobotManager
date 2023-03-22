@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 
 namespace PlcRobotManager.Core.Vendor.Mitsubishi
 {
@@ -22,6 +23,18 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         public string Description { get; }
 
         public bool IsBit() => Type == DeviceType.Bit;
+
+        public string GetAddressString(int address)
+        {
+            if (NumberType == NumberType.Decimal)
+            {
+                return Name + address.ToString().PadLeft(5, '0');
+            }
+            else
+            {
+                return Name + address.ToString("X4").PadLeft(5, '0');
+            }
+        }
 
         public static Device FromName(string name)
         {
@@ -60,5 +73,6 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         public static Device B => _devices["B"];
         public static Device D => _devices["D"];
         public static Device W => _devices["W"];
+
     }
 }

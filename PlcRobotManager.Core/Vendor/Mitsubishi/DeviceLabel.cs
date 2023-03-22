@@ -9,7 +9,7 @@
         {
             Device = device;
             Address = address;
-            AddressString = GetAddressString();
+            AddressString = device.GetAddressString(address);
             Group = group;
         }
 
@@ -29,19 +29,6 @@
         /// 수집 그룹. 매뉴얼 방식으로 데이터를 수집할 때 적용된다.
         /// </summary>
         public GatheringGroup Group { get; }
-
-
-        private string GetAddressString()
-        {
-            if(Device.NumberType == NumberType.Decimal)
-            {
-                return Device.Name + Address.ToString().PadLeft(5, '0');
-            }
-            else
-            {
-                return Device.Name + Address.ToString("X4").PadLeft(5, '0');
-            }
-        }
 
     }
 }

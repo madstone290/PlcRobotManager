@@ -16,21 +16,21 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
             if (1 < deviceLabels.GroupBy(x => x.Device).Count()) throw new ArgumentException("2개 이상의 디바이스가 존재합니다");
 
             OrderedDeviceLabels = deviceLabels.OrderBy(x => x.Address);
-            IsBitBlock = deviceLabels.First().Device.IsBit();
+            Device = deviceLabels.First().Device;
+            IsBitBlock = Device.IsBit();
 
-
+            Tuple<int, int> tuple;
             if (IsBitBlock)
             {
-                var tuple = InitBitBlockRange(deviceLabels);
-                Start = tuple.Item1;
-                Length = tuple.Item2;
+                tuple = InitBitBlockRange(deviceLabels);
             }
             else
             {
-                var tuple = InitWordBlockRange(deviceLabels);
-                Start = tuple.Item1;
-                Length = tuple.Item2;
+                tuple = InitWordBlockRange(deviceLabels);
             }
+            StartAddress = tuple.Item1;
+            Length = tuple.Item2;
+            StartAddressString = Device.GetAddressString(StartAddress);
 
         }
 
@@ -40,13 +40,22 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
         public IEnumerable<DeviceLabel> OrderedDeviceLabels { get; }
 
         /// <summary>
-        /// 시작 디바이스. 실제 필요한 라벨과 다를 수 있다.
-        /// 비트라벨인 경우 2바이트 단위로 수행되는 블록읽기의 특성으로 인해 시작비트라벨을 생성하는 경우가 있다.
+        /// 디바이스
         /// </summary>
-        public DeviceLabel Start { get; }
+        public Device Device { get; }
 
         /// <summary>
-        /// 워드단위 길이.
+        /// 시작주소(워드)
+        /// </summary>
+        public int StartAddress { get; }
+
+        /// <summary>
+        /// 시작주소 문자열
+        /// </summary>
+        public string StartAddressString { get; }
+
+        /// <summary>
+        /// 길이(워드)
         /// </summary>
         public int Length { get; }
 
@@ -60,15 +69,14 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
         /// </summary>
         /// <param name="orderedLabels">주소의 오름차순으로 정렬된 라벨목록</param>
         /// <returns></returns>
-        private Tuple<DeviceLabel, int> InitWordBlockRange(IEnumerable<DeviceLabel> orderedLabels)
+        private Tuple<int, int> InitWordBlockRange(IEnumerable<DeviceLabel> orderedLabels)
         {
             DeviceLabel min = orderedLabels.First();
             DeviceLabel max = orderedLabels.Last();
 
-            DeviceLabel start = min;
             int length = max.Address - min.Address + 1;
 
-            return Tuple.Create(start, length);
+            return Tuple.Create(min.Address, length);
         }
 
         /// <summary>
@@ -77,7 +85,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
         /// <param name="orderedLabels">주소의 오름차순으로 정렬된 라벨목록</param>
         /// <exception cref="Exception"></exception>
         /// <returns></returns>
-        private Tuple<DeviceLabel, int> InitBitBlockRange(IEnumerable<DeviceLabel> orderedLabels)
+        private Tuple<int, int> InitBitBlockRange(IEnumerable<DeviceLabel> orderedLabels)
         {
             DeviceLabel min = orderedLabels.First();
             DeviceLabel max = orderedLabels.Last();
@@ -85,9 +93,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
             int startWordAddress = min.Address / 16;
             int endWordAddress = max.Address / 16;
             int length = endWordAddress - startWordAddress + 1;
-            DeviceLabel start = new DeviceLabel(min.Device, startWordAddress, min.Group);
 
-            return Tuple.Create(start, length);
+            return Tuple.Create(startWordAddress, length);
         }
 
 
