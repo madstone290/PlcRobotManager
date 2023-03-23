@@ -58,5 +58,9 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 
         public override IEnumerable<RandomRange> RandomRanges => _randomRanges;
 
+        public override string ToString()
+        {
+            return nameof(RandomDataGatherer);
+        }
     }
 }

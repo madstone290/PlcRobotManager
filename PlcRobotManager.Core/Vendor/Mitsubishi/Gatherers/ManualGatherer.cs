@@ -1,10 +1,6 @@
 ﻿using PlcRobotManager.Core.Vendor.Mitsubishi.Ranges;
-using PlcRobotManager.Core.Vendor.Mitsubishi.Readers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 {
@@ -42,5 +38,9 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 
         public override IEnumerable<RandomRange> RandomRanges => _randomRanges;
 
+        public override string ToString()
+        {
+            return nameof(ManualGatherer);
+        }
     }
 }

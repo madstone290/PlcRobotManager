@@ -39,5 +39,10 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Readers
 
             return Result<Dictionary<string, short>>.Success(data);
         }
+
+        public override string ToString()
+        {
+            return $"{nameof(WordBlockReader)}";
+        }
     }
 }

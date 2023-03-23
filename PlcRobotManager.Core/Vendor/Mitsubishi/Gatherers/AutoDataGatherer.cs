@@ -48,6 +48,10 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 
         public override IEnumerable<RandomRange> RandomRanges => _randomRanges;
 
+        public override string ToString()
+        {
+            return nameof(AutoDataGatherer);
+        }
 
         /// <summary>
         /// 데이터 수집에 사용할 라벨을 분류한다.

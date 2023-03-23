@@ -33,5 +33,10 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
         /// 주소의 개수
         /// </summary>
         public int Length { get; }
+
+        public override string ToString()
+        {
+            return $"{nameof(RandomRange)}";
+        }
     }
 }

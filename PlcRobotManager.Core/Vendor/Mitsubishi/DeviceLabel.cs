@@ -1,4 +1,6 @@
-﻿namespace PlcRobotManager.Core.Vendor.Mitsubishi
+﻿using PlcRobotManager.Core.Vendor.Mitsubishi.Readers;
+
+namespace PlcRobotManager.Core.Vendor.Mitsubishi
 {
     /// <summary>
     /// 디바이스 라벨(주소). 디바이스 및 주소정보를 가진다.
@@ -68,5 +70,9 @@
         /// </summary>
         public bool IsBitValue => Device.IsBit() || BitPosition.HasValue;
 
+        public override string ToString()
+        {
+            return $"{nameof(DeviceLabel)} {AddressString}";
+        }
     }
 }

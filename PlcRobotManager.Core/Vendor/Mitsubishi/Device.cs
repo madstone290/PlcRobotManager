@@ -49,7 +49,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
 
         public override string ToString()
         {
-            return $"Device: {Name}";
+            return $"{nameof(Device)} {Name}";
         }
 
         public static Device FromName(string name)

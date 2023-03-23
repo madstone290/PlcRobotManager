@@ -56,5 +56,10 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
         /// </summary>
         public bool IsBitBlock { get; }
 
+        public override string ToString()
+        {
+            return $"{nameof(BlockRange)} {Device.Name}/{StartWordAddress}/{Length}";
+        }
+
     }
 }
