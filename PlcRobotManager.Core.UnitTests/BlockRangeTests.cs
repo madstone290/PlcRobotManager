@@ -24,7 +24,7 @@ namespace PlcRobotManager.Core.UnitTests
         [InlineData(15, 45)]
         public void BitBlock_Size_DividedBy_16(int address, int count)
         {
-            IEnumerable<DeviceLabel> labels = Enumerable.Range(0, count).Select(i => new DeviceLabel(Device.X, address + i));
+            IEnumerable<DeviceLabel> labels = Enumerable.Range(0, count).Select(i => new DeviceLabel((address + i).ToString(), Device.X, address + i));
             int expectedLength = (address + count - 1) / 16 + 1;
 
             BlockRange blockRange = new BlockRange(labels);

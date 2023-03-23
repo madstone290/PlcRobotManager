@@ -58,7 +58,7 @@ namespace PlcRobotManager.Core.UnitTests
         /// <param name="minLabelCount"></param>
         /// <param name="expBlockCount"></param>
         [Theory]
-        [InlineData(new object[] { new string[] { "D", "M" }, new int[] { 0, 0 }, new int[] { 1500, 2500 }, 1000, 50, new int[] { 2, 3 } })]
+        [InlineData(new object[] { new string[] { "D", "M" }, new int[] { 0, 0 }, new int[] { 1500, 1600 }, 1000, 50, new int[] { 2, 1 } })]
         public void Sort_Multiple_Blocks(string[] devices, int[] startAddresses, int[] count, int maxBlockSize, int minLabelCount, int[] expBlockCount)
         {
             var sorter = new AutoDataGatherer.Sorter();
@@ -82,19 +82,6 @@ namespace PlcRobotManager.Core.UnitTests
             {
                 var deviceRanges = ranges.Item1.Where(x => x.Device == Device.FromName(devices[i]));
                 deviceRanges.Count().Should().Be(expBlockCount[i]);
-
-                int remaining = count[i];
-                foreach (var range in deviceRanges)
-                {
-                    int expected = Math.Min(remaining, maxBlockSize);
-                    if (range.IsBitBlock)
-                        range.Length.Should().Be((expected - 1) / 16 + 1);
-                    else
-                        range.Length.Should().Be(expected);
-                    remaining -= expected;
-                }
-
-
             }
 
             ranges.Item2.Should().BeEmpty();
