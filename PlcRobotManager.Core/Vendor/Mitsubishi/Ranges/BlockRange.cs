@@ -21,9 +21,10 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
 
             DeviceLabel min = OrderedDeviceLabels.First();
             DeviceLabel max = OrderedDeviceLabels.Last();
-            StartWordAddress = min.WordAddress;
-            Length = max.WordAddress - min.WordAddress + 1;
-            StartWordAddressString = min.WordAddressString;
+            
+            StartWordAddress = min.StartWordAddress;
+            Length = max.EndWordAddress - min.StartWordAddress+ 1;
+            StartWordAddressString = min.StartWordAddressString;
         }
 
         /// <summary>

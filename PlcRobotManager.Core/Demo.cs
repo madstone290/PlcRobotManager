@@ -19,13 +19,13 @@ namespace PlcRobotManager.Core
                 ActTargetSimulator = 1
             });
 
-            GatheringGroup group1 = new GatheringGroup("블록1", RangeType.Block);
+            GatheringGroup group1 = new GatheringGroup("블록1", RangeType.Random);
             GatheringGroup group2 = new GatheringGroup("블록2", RangeType.Block);
             GatheringGroup group3 = new GatheringGroup("블록3", RangeType.Random);
             GatheringGroup group4 = new GatheringGroup("랜덤1", RangeType.Random);
-            var groupLabels1 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(Device.D, i, group: group1));
-            var groupLabels2 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(Device.X, i, group: group4));
-            var groupLabels3 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(Device.D, i, (i % 16), group: group1));
+            var groupLabels1 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(Device.D, i * 2, length: 2, group: group1));
+            var groupLabels2 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(Device.X, i, group: group2));
+            var groupLabels3 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(Device.D, i, bitPosition: (i % 16), group: group1));
             var groupLabels4 = Enumerable.Range(0, 100).Select(i =>
             {
                 if (i % 3 == 0)

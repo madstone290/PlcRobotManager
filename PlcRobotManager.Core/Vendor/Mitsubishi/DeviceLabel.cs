@@ -1,4 +1,5 @@
-﻿using PlcRobotManager.Core.Vendor.Mitsubishi.Readers;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace PlcRobotManager.Core.Vendor.Mitsubishi
 {
@@ -7,23 +8,24 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
     /// </summary>
     public class DeviceLabel
     {
-        public DeviceLabel(Device device, int address, int? bitPosition = null, GatheringGroup group = null)
+        public DeviceLabel(Device device, int address, int length = 1, int? bitPosition = null, GatheringGroup group = null)
         {
             Device = device;
             Address = address;
+            Length = length < 1 ? 1 : length;
 
             if (device.IsBit())
             {
-                WordAddress = address / 16;
+                StartWordAddress = address / 16;
                 BitPosition = address % 16;
             }
             else
             {
-                WordAddress = address;
+                StartWordAddress = address;
                 BitPosition = bitPosition;
             }
 
-            WordAddressString = device.GetAddressString(WordAddress);
+            StartWordAddressString = device.GetAddressString(StartWordAddress);
             AddressString = device.GetAddressString(Address, BitPosition);
 
             Group = group;
@@ -35,7 +37,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         public Device Device { get; }
 
         /// <summary>
-        /// 실제 주소.
+        /// 실제 시작 주소.
         /// 비트주소인 경우 워드주소로 수신한 값을 비트단위로 읽는다.
         /// </summary>
         public int Address { get; }
@@ -46,19 +48,36 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         public string AddressString { get; }
 
         /// <summary>
-        /// 값 조회를 위한 워드주소. 블록읽기에 사용한다.
+        /// 라벨에 포함된 모든 주소의 문자열
         /// </summary>
-        public int WordAddress { get; }
+        public List<string> AddressStringList => Enumerable.Range(0, Length)
+            .Select(offset => Device.GetAddressString(Address + offset, BitPosition))
+            .ToList();
+
+        /// <summary>
+        /// 값 조회를 위한 시작 워드주소. 블록읽기에 사용한다.
+        /// </summary>
+        public int StartWordAddress { get; }
+
+        /// <summary>
+        /// 끝 워드 주소
+        /// </summary>
+        public int EndWordAddress => StartWordAddress + Length - 1;
 
         /// <summary>
         /// 워드주소의 문자열 표현
         /// </summary>
-        public string WordAddressString { get; }
+        public string StartWordAddressString { get; }
 
         /// <summary>
         /// 라벨의 비트위치. 워드값을 비트로 사용할 때 적용한다.
         /// </summary>
         public int? BitPosition { get; }
+
+        /// <summary>
+        /// 워드 길이
+        /// </summary>
+        public int Length { get; } = 1;
 
         /// <summary>
         /// 수집 그룹. 매뉴얼 방식으로 데이터를 수집할 때 적용된다.

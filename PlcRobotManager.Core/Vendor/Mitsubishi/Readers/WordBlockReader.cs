@@ -30,11 +30,19 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Readers
             Dictionary<string, short> data = new Dictionary<string, short>();
             foreach (var label in blockRange.OrderedDeviceLabels)
             {
-                int shortIndex = label.WordAddress - blockRange.StartWordAddress; // short배열 인덱스
-                if (!label.IsBitValue) // word이면 그대로 저장
-                    data[label.AddressString] = result.Data[shortIndex];
-                else // bit이면 비트값 읽고 저장
+                int shortIndex = label.StartWordAddress - blockRange.StartWordAddress; // short배열 인덱스
+                if (label.IsBitValue) // bit이면 비트값 읽고 저장
+                {
                     data[label.AddressString] = BitUtil.IsOn(result.Data[shortIndex], label.BitPosition.Value) ? (short)1 : (short)0;
+                }
+                else // word이면 그대로 저장 
+                { 
+                    int offset = 0;
+                    foreach(var addressString in label.AddressStringList)
+                    {
+                        data[addressString] = result.Data[shortIndex + offset++];
+                    }
+                }
             }
 
             return Result<Dictionary<string, short>>.Success(data);

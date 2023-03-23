@@ -22,7 +22,13 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Readers
 
             int shortIndex = 0; // 수신한 short배열에서의 인덱스
             foreach (DeviceLabel label in randomRange.OrderedDeviceLabels)
-                data[label.AddressString] = readResult.Data[shortIndex++];
+            {
+                foreach(string addressString in label.AddressStringList)
+                {
+                    data[addressString] = readResult.Data[shortIndex++];
+                }
+            }
+                
 
             return Result<Dictionary<string, short>>.Success(data);
         }

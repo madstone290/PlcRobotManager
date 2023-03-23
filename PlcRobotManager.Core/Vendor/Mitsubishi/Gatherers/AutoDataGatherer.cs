@@ -121,12 +121,12 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
                 while (0 < remainingLabelCount)
                 {
                     // 현재 블록크기를 설정한다.
-                    leftAddress = orderedLabels.First(x => rightAddress < x.WordAddress).WordAddress; // 남은 구간의 시작주소
-                    rightAddress = leftAddress + maxBlockSize < last.WordAddress  // 남은 구간의 끝 주소
+                    leftAddress = orderedLabels.First(x => rightAddress < x.StartWordAddress).StartWordAddress; // 남은 구간의 시작주소
+                    rightAddress = leftAddress + maxBlockSize < last.EndWordAddress  // 남은 구간의 끝 주소
                         ? leftAddress + maxBlockSize // 남은 블록크기가 최대 블록크기보다 큰 경우
-                        : last.WordAddress; // 최대 블록크기보다 작은 경우
+                        : last.EndWordAddress; // 최대 블록크기보다 작은 경우
                     // 현재 블록에 포함된 모든 라벨을 그룹으로 등록한다.
-                    List<DeviceLabel> blockGroup = orderedLabels.Where(x => leftAddress <= x.WordAddress && x.WordAddress <= rightAddress).ToList();
+                    List<DeviceLabel> blockGroup = orderedLabels.Where(x => leftAddress <= x.StartWordAddress && x.StartWordAddress <= rightAddress).ToList();
                     blockGroups.Add(blockGroup);
 
                     remainingLabelCount -= blockGroup.Count;

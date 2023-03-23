@@ -14,9 +14,9 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
             if (deviceLabels == null) throw new ArgumentNullException(nameof(deviceLabels));
             if (!deviceLabels.Any()) throw new ArgumentException("디바이스 라벨이 비었습니다");
 
-            Length = deviceLabels.Count();
             OrderedDeviceLabels = deviceLabels.OrderBy(x => x.AddressString);
-            DeviceList = string.Join("\n", OrderedDeviceLabels.Select(x => x.AddressString));
+            Length = OrderedDeviceLabels.Sum(x => x.AddressStringList.Count); // 조회할 모든 주소의 개수
+            DeviceList = string.Join("\n", OrderedDeviceLabels.SelectMany(x=> x.AddressStringList));
         }
 
         /// <summary>
