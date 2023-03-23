@@ -22,17 +22,15 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Readers
             if(blockRange == null) throw new ArgumentNullException(nameof(blockRange));
             if (!blockRange.IsBitBlock) throw new ArgumentException("비트블록이 아닙니다");
 
-            var result = _plc.ReadBlock2(blockRange.StartAddressString, blockRange.Length);
+            var result = _plc.ReadBlock2(blockRange.StartWordAddressString, blockRange.Length);
 
             if (!result.IsSuccessful)
                 return Result<Dictionary<string, short>>.Fail(result.Message);
 
             Dictionary<string, short> data = new Dictionary<string, short>();
-            int startAddress = blockRange.StartAddress;
-
             foreach(var label in blockRange.OrderedDeviceLabels)
             {
-                int bitIndex = label.Address - startAddress; // 비트 주소의 인덱스
+                int bitIndex = label.Address - blockRange.StartWordAddress; // 비트 주소의 인덱스
                 int shortIndex = bitIndex / 16; // 수신한 short배열에서의 인덱스
                 short shortValue = result.Data[shortIndex]; 
 

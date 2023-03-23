@@ -23,7 +23,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         /// <summary>
         /// 한번에 읽어올 디바이스 개수
         /// </summary>
-        private int _readLength = 100;
+        private int _readLength = 500;
 
         public RandomDataGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels) : base(plc)
         {

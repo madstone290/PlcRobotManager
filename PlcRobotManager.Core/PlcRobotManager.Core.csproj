@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitUtil.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="IDataManager.cs" />
     <Compile Include="ILogger.cs" />

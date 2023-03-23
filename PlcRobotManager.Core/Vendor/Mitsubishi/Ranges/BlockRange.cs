@@ -19,19 +19,11 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
             Device = deviceLabels.First().Device;
             IsBitBlock = Device.IsBit();
 
-            Tuple<int, int> tuple;
-            if (IsBitBlock)
-            {
-                tuple = InitBitBlockRange(deviceLabels);
-            }
-            else
-            {
-                tuple = InitWordBlockRange(deviceLabels);
-            }
-            StartAddress = tuple.Item1;
-            Length = tuple.Item2;
-            StartAddressString = Device.GetAddressString(StartAddress);
-
+            DeviceLabel min = OrderedDeviceLabels.First();
+            DeviceLabel max = OrderedDeviceLabels.Last();
+            StartWordAddress = min.WordAddress;
+            Length = max.WordAddress - min.WordAddress + 1;
+            StartWordAddressString = min.WordAddressString;
         }
 
         /// <summary>
@@ -47,12 +39,12 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
         /// <summary>
         /// 시작주소(워드)
         /// </summary>
-        public int StartAddress { get; }
+        public int StartWordAddress { get; }
 
         /// <summary>
-        /// 시작주소 문자열
+        /// 시작주소 문자열(워드)
         /// </summary>
-        public string StartAddressString { get; }
+        public string StartWordAddressString { get; }
 
         /// <summary>
         /// 길이(워드)
@@ -63,40 +55,6 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
         /// 비트블록 여부
         /// </summary>
         public bool IsBitBlock { get; }
-
-        /// <summary>
-        /// 워드블록범위로 초기화한다
-        /// </summary>
-        /// <param name="orderedLabels">주소의 오름차순으로 정렬된 라벨목록</param>
-        /// <returns></returns>
-        private Tuple<int, int> InitWordBlockRange(IEnumerable<DeviceLabel> orderedLabels)
-        {
-            DeviceLabel min = orderedLabels.First();
-            DeviceLabel max = orderedLabels.Last();
-
-            int length = max.Address - min.Address + 1;
-
-            return Tuple.Create(min.Address, length);
-        }
-
-        /// <summary>
-        /// 비트블록범위로 초기화한다
-        /// </summary>
-        /// <param name="orderedLabels">주소의 오름차순으로 정렬된 라벨목록</param>
-        /// <exception cref="Exception"></exception>
-        /// <returns></returns>
-        private Tuple<int, int> InitBitBlockRange(IEnumerable<DeviceLabel> orderedLabels)
-        {
-            DeviceLabel min = orderedLabels.First();
-            DeviceLabel max = orderedLabels.Last();
-
-            int startWordAddress = min.Address / 16;
-            int endWordAddress = max.Address / 16;
-            int length = endWordAddress - startWordAddress + 1;
-
-            return Tuple.Create(startWordAddress, length);
-        }
-
 
     }
 }

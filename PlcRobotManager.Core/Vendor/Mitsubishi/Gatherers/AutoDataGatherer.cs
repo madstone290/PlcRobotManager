@@ -11,7 +11,6 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
     /// </summary>
     public class AutoDataGatherer : BaseGatherer
     {
-        
         /// <summary>
         /// 디바이스 목록
         /// </summary>
@@ -74,7 +73,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
                 foreach (var group in deviceLabelGroups)
                 {
                     if (group.Count() < minLabelCount)
-                    {  // 최소 라벨개수보다 적으면 랜덤범위로 추가
+                    {  
+                        // 최소 라벨개수보다 적으면 랜덤범위로 추가
                         randomLabels.AddRange(group);
                         continue;
                     }
@@ -107,16 +107,25 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
                 List<List<DeviceLabel>> blockGroups = new List<List<DeviceLabel>>();
                 IEnumerable<DeviceLabel> orderedLabels = deviceLabels.OrderBy(x => x.Address);
 
-                int startAddress = orderedLabels.First().Address;
-                int endAddress = orderedLabels.Last().Address;
-                int remainingBlockSize = endAddress - startAddress + 1;
+                DeviceLabel first = orderedLabels.First();
+                DeviceLabel last = orderedLabels.Last();
 
-                while (0 < remainingBlockSize)
+                int leftAddress = -1;
+                int rightAddress = -1;
+                int remainingLabelCount = orderedLabels.Count();
+
+                while (0 < remainingLabelCount)
                 {
-                    int actBlockSize = Math.Min(remainingBlockSize, maxBlockSize);
-                    blockGroups.Add(orderedLabels.Take(actBlockSize).ToList());
+                    // 현재 블록크기를 설정한다.
+                    leftAddress = orderedLabels.First(x => rightAddress < x.WordAddress).WordAddress; // 남은 구간의 시작주소
+                    rightAddress = leftAddress + maxBlockSize < last.WordAddress  // 남은 구간의 끝 주소
+                        ? leftAddress + maxBlockSize // 남은 블록크기가 최대 블록크기보다 큰 경우
+                        : last.WordAddress; // 최대 블록크기보다 작은 경우
+                    // 현재 블록에 포함된 모든 라벨을 그룹으로 등록한다.
+                    List<DeviceLabel> blockGroup = orderedLabels.Where(x => leftAddress <= x.WordAddress && x.WordAddress <= rightAddress).ToList();
+                    blockGroups.Add(blockGroup);
 
-                    remainingBlockSize -= actBlockSize;
+                    remainingLabelCount -= blockGroup.Count;
                 }
 
                 return blockGroups;

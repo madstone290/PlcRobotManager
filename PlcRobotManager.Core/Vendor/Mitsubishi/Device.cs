@@ -22,18 +22,34 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         public NumberType NumberType { get; }
         public string Description { get; }
 
+        /// <summary>
+        /// 디바이스 타입이 비트인지 확인한다.
+        /// </summary>
+        /// <returns></returns>
         public bool IsBit() => Type == DeviceType.Bit;
 
-        public string GetAddressString(int address)
+        public string GetAddressString(int address, int? bitPosition = null)
         {
+            string addressString;
             if (NumberType == NumberType.Decimal)
             {
-                return Name + address.ToString().PadLeft(5, '0');
+                addressString = Name + address.ToString().PadLeft(5, '0');
             }
             else
             {
-                return Name + address.ToString("X4").PadLeft(5, '0');
+                addressString = Name + address.ToString("X").PadLeft(5, '0');
             }
+
+            // 워드 디바이스인 경우에는 16진수로 소수점 아래 표기를한다.
+            if (Type == DeviceType.Word && bitPosition.HasValue)
+                addressString += "." + bitPosition.Value.ToString("X");
+
+            return addressString;
+        }
+
+        public override string ToString()
+        {
+            return $"Device: {Name}";
         }
 
         public static Device FromName(string name)

@@ -39,7 +39,7 @@ namespace PlcRobotManager.Core.UnitTests
             Tuple<List<BlockRange>, List<RandomRange>> ranges = sorter.Sort(labels, maxBlockSize, minLabelCount);
 
             ranges.Item1.Should().HaveCount(1);
-            ranges.Item1.First().StartAddress.Should().Be(startAddress);
+            ranges.Item1.First().StartWordAddress.Should().Be(startAddress);
             if (ranges.Item1.First().IsBitBlock)
                 ranges.Item1.First().Length.Should().Be((count - 1) / 16 + 1);
             else
