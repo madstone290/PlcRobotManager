@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace PlcRobotManager.Ui
 {
-    public class PlcValue
+    public class PlcRawValue
     {
         private readonly BitArray _bitArray;
         private readonly string _address;
         private readonly short _value;
 
-        public PlcValue(string address, short value)
+        public PlcRawValue(string address, short value)
         {
             _address = address;
             _value = value;

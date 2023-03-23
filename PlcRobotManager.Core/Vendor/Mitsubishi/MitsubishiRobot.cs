@@ -69,9 +69,14 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         private readonly List<DeviceLabel> _deviceLabels = new List<DeviceLabel>();
 
         /// <summary>
-        /// 로봇 데이터
+        /// 로봇 데이터(가공)
         /// </summary>
-        private readonly ConcurrentDictionary<string, short> _data = new ConcurrentDictionary<string, short>();
+        private readonly ConcurrentDictionary<string, object> _processedData = new ConcurrentDictionary<string, object>();
+
+        /// <summary>
+        /// 로봇 데이터(원본)
+        /// </summary>
+        private readonly ConcurrentDictionary<string, short> _rawData = new ConcurrentDictionary<string, short>();
 
         /// <summary>
         /// 읽기작업을 진행할 데이터 리더
@@ -167,7 +172,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
 
                     if (DataLoggingEnabled && (++readCycle % ActDataLoggingCycle == 0))
                     {
-                        var data = new Dictionary<string, short>(_data);
+                        var data = new Dictionary<string, object>(_processedData);
                         var text = JsonConvert.SerializeObject(data);
                         _logger.Info($"{_logId}  {text}");
                     }
@@ -210,15 +215,21 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
                 return false;
             }
 
-            foreach (var pair in result.Data)
+            foreach(var pair in _plcDataReader.RawData)
             {
-                _data[pair.Key] = pair.Value;
+                _rawData[pair.Key] = pair.Value;
             }
+
+            foreach (var pair in _plcDataReader.ProcessedData)
+            {
+                _processedData[pair.Key] = pair.Value;
+            }
+
             _totalReadCount++;
 
             // 데모 저장
             if (_totalReadCount != 0 && _totalReadCount % 10 == 0)
-                Save?.Invoke(this, new Dictionary<string, short>(_data));
+                Save?.Invoke(this, new Dictionary<string, object>(_processedData));
 
             return true;
         }
@@ -256,9 +267,14 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
             await Task.Run(() => _worker.Join());
         }
 
-        public Dictionary<string, short> GetData()
+        public Dictionary<string, object> GetProcessedData()
         {
-            return new Dictionary<string, short>(_data);
+            return new Dictionary<string, object>(_processedData);
+        }
+
+        public Dictionary<string, short> GetRawData()
+        {
+            return new Dictionary<string, short>(_rawData);
         }
     }
 }

@@ -8,8 +8,9 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
     /// </summary>
     public class DeviceLabel
     {
-        public DeviceLabel(Device device, int address, int length = 1, int? bitPosition = null, GatheringGroup group = null)
+        public DeviceLabel(string code, Device device, int address, int length = 1, int? bitPosition = null, GatheringGroup group = null)
         {
+            Code = code;
             Device = device;
             Address = address;
             Length = length < 1 ? 1 : length;
@@ -31,6 +32,11 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
             Group = group;
         }
 
+        /// <summary>
+        /// 라벨 식별을 위한 코드. 중복이 허용되지 않는다.
+        /// </summary>
+        public string Code { get; }
+        
         /// <summary>
         /// 디바이스
         /// </summary>
@@ -88,6 +94,20 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         /// 라벨의 값이 비트값인가?
         /// </summary>
         public bool IsBitValue => Device.IsBit() || BitPosition.HasValue;
+
+        /// <summary>
+        /// 라벨의 데이터 타입에 맞게 값을 변환한다.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public object ConvertValue(IEnumerable<short> values)
+        {
+            // Demo 
+            if (Length == 1)
+                return values.First();
+            else
+                return values.First() * short.MaxValue + values.Skip(1).First();
+        }
 
         public override string ToString()
         {

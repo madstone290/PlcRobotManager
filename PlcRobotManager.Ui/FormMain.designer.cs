@@ -35,6 +35,7 @@
             this.미쓰비시ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.오토ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.수동ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.자동원본ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -60,6 +61,7 @@
             // 미쓰비시ToolStripMenuItem
             // 
             this.미쓰비시ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.자동원본ToolStripMenuItem,
             this.오토ToolStripMenuItem,
             this.수동ToolStripMenuItem});
             this.미쓰비시ToolStripMenuItem.Name = "미쓰비시ToolStripMenuItem";
@@ -70,7 +72,7 @@
             // 
             this.오토ToolStripMenuItem.Name = "오토ToolStripMenuItem";
             this.오토ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.오토ToolStripMenuItem.Text = "자동";
+            this.오토ToolStripMenuItem.Text = "자동_가공";
             this.오토ToolStripMenuItem.Click += new System.EventHandler(this.오토ToolStripMenuItem_Click);
             // 
             // 수동ToolStripMenuItem
@@ -79,6 +81,13 @@
             this.수동ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.수동ToolStripMenuItem.Text = "수동";
             this.수동ToolStripMenuItem.Click += new System.EventHandler(this.수동ToolStripMenuItem_Click);
+            // 
+            // 자동원본ToolStripMenuItem
+            // 
+            this.자동원본ToolStripMenuItem.Name = "자동원본ToolStripMenuItem";
+            this.자동원본ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.자동원본ToolStripMenuItem.Text = "자동_원본";
+            this.자동원본ToolStripMenuItem.Click += new System.EventHandler(this.자동원본ToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -106,5 +115,6 @@
         private System.Windows.Forms.ToolStripMenuItem 미쓰비시ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 오토ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 수동ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 자동원본ToolStripMenuItem;
     }
 }

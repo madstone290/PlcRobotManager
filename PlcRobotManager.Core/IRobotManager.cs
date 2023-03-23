@@ -16,11 +16,17 @@ namespace PlcRobotManager.Core
         Task StopAsync();
 
         /// <summary>
-        /// 주어진 로봇의 현재 데이터를 읽어온다
+        /// 주어진 로봇의 가공 데이터를 읽어온다
         /// </summary>
         /// <param name="robotName"></param>
         /// <returns></returns>
-        Dictionary<string, short> GetRobotData(string robotName);
+        Dictionary<string, object> GetProcessedRobotData(string robotName);
 
+        /// <summary>
+        /// 주어진 로봇의 원본 데이터를 읽어온다
+        /// </summary>
+        /// <param name="robotName"></param>
+        /// <returns></returns>
+        Dictionary<string, short> GetRawRobotData(string robotName);
     }
 }

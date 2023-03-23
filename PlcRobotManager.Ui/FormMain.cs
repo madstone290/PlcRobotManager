@@ -30,7 +30,12 @@ namespace PlcRobotManager.Ui
 
         private void 오토ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            documentManager1.View.AddDocument(new FormAuto(), "자동");
+            documentManager1.View.AddDocument(new FormAutoProcessed(), "자동_가공");
+        }
+
+        private void 자동원본ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            documentManager1.View.AddDocument(new FormAutoRaw(), "자동_원본");
         }
     }
 }

@@ -56,14 +56,24 @@ namespace PlcRobotManager.Core.Impl
 #endif
         }
 
-        public Dictionary<string, short> GetRobotData(string robotName)
+        public Dictionary<string, object> GetProcessedRobotData(string robotName)
         {
             if(robotName == null)
+                return new Dictionary<string, object>();
+            if (!_robots.TryGetValue(robotName, out var robot))
+                return new Dictionary<string, object>();
+
+            return robot.GetProcessedData();
+        }
+
+        public Dictionary<string, short> GetRawRobotData(string robotName)
+        {
+            if (robotName == null)
                 return new Dictionary<string, short>();
             if (!_robots.TryGetValue(robotName, out var robot))
                 return new Dictionary<string, short>();
 
-            return robot.GetData();
+            return robot.GetRawData();
         }
     }
 }

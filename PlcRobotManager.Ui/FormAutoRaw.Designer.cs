@@ -1,6 +1,6 @@
 ﻿namespace PlcRobotManager.Ui
 {
-    partial class FormAuto
+    partial class FormAutoRaw
     {
         /// <summary>
         /// Required designer variable.

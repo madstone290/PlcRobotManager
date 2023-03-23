@@ -23,17 +23,18 @@ namespace PlcRobotManager.Core
             GatheringGroup group2 = new GatheringGroup("블록2", RangeType.Block);
             GatheringGroup group3 = new GatheringGroup("블록3", RangeType.Random);
             GatheringGroup group4 = new GatheringGroup("랜덤1", RangeType.Random);
-            var groupLabels1 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(Device.D, i * 2, length: 2, group: group1));
-            var groupLabels2 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(Device.X, i, group: group2));
-            var groupLabels3 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(Device.D, i, bitPosition: (i % 16), group: group1));
+            int codeNumber = 0;
+            var groupLabels1 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(codeNumber++.ToString(), Device.D, i * 2, length: 2, group: group1));
+            var groupLabels2 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(codeNumber++.ToString(), Device.X, i, group: group2));
+            var groupLabels3 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(codeNumber++.ToString(), Device.D, i, bitPosition: (i % 16), group: group1));
             var groupLabels4 = Enumerable.Range(0, 100).Select(i =>
             {
                 if (i % 3 == 0)
-                    return new DeviceLabel(Device.M, i * 3, group: group4);
+                    return new DeviceLabel(codeNumber++.ToString(), Device.M, i * 3, group: group4);
                 else if(i % 3 == 1)
-                    return new DeviceLabel(Device.L, i * 3, group: group4);
+                    return new DeviceLabel(codeNumber++.ToString(), Device.L, i * 3, group: group4);
                 else
-                    return new DeviceLabel(Device.Y, i * 3, group: group4);
+                    return new DeviceLabel(codeNumber++.ToString(), Device.Y, i * 3, group: group4);
             });
             var allLabels = groupLabels1.Concat(groupLabels2).Concat(groupLabels3).Concat(groupLabels4).ToList();
 

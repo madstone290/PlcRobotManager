@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace PlcRobotManager.Core.Vendor.Mitsubishi
 {
@@ -8,9 +9,20 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
     public interface IPlcDataGatherer
     {
         /// <summary>
-        /// PLC 데이터를 수집한다.
+        /// 주소/값 사전
         /// </summary>
-        /// <returns></returns>
-        Result<Dictionary<string, short>> Gather();
+        IReadOnlyDictionary<string, short> RawData { get; }
+
+        /// <summary>
+        /// 라벨코드/값 사전
+        /// </summary>
+        IReadOnlyDictionary<string, object> ProcessedData { get; }
+
+        /// <summary>
+        /// PLC 데이터를 수집한다. 
+        /// </summary>
+        /// <returns>주소단위의 값 반환.</returns>
+        Result Gather();
+
     }
 }

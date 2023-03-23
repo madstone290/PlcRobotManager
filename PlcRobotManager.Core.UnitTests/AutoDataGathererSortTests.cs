@@ -33,7 +33,7 @@ namespace PlcRobotManager.Core.UnitTests
             var sorter = new AutoDataGatherer.Sorter();
             int address = startAddress;
             var labels = Enumerable.Range(0, count)
-                .Select(x => new DeviceLabel(Device.FromName(device), address++));
+                .Select(x => new DeviceLabel(address.ToString(), Device.FromName(device), address++));
 
 
             Tuple<List<BlockRange>, List<RandomRange>> ranges = sorter.Sort(labels, maxBlockSize, minLabelCount);
@@ -70,7 +70,7 @@ namespace PlcRobotManager.Core.UnitTests
                 int address = startAddresses[i];
                 for (int j = 0; j < count[i]; j++)
                 {
-                    labels.Add(new DeviceLabel(device, address++));
+                    labels.Add(new DeviceLabel(address.ToString(), device, address++));
                 }
 
             }

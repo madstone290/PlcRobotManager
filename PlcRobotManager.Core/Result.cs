@@ -19,7 +19,8 @@
     /// </summary>
     public class Result : Result<bool>
     {
-        
+        public static Result Success() => new Result() { IsSuccessful = true };
+        public new static Result Fail(string message) => new Result() { IsSuccessful = false, Message = message };
     }
 
     

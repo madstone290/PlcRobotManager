@@ -1,5 +1,6 @@
 ﻿using PlcRobotManager.Core.Vendor.Mitsubishi.Ranges;
 using PlcRobotManager.Core.Vendor.Mitsubishi.Readers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +12,16 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         /// 읽기를 진행할 PLC
         /// </summary>
         protected readonly IMitsubishiPlc _plc;
+
+        /// <summary>
+        /// 원본 데이터. 주소/값 쌍
+        /// </summary>
+        protected readonly Dictionary<string, short> _rawData = new Dictionary<string, short>();
+
+        /// <summary>
+        /// 가공된 데이터. 라벨코드/값 쌍
+        /// </summary>
+        protected readonly Dictionary<string, object> _processedData = new Dictionary<string, object>();
 
         /// <summary>
         /// 비트블록 리더
@@ -37,6 +48,10 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         /// </summary>
         public abstract IEnumerable<RandomRange> RandomRanges { get; }
 
+        public IReadOnlyDictionary<string, short> RawData => _rawData;
+
+        public IReadOnlyDictionary<string, object> ProcessedData => _processedData;
+
         public BaseGatherer(IMitsubishiPlc plc)
         {
             _plc = plc;
@@ -45,9 +60,9 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             _randomReader = new RandomReader(plc);
         }
 
-        public Result<Dictionary<string, short>> Gather()
+        public Result Gather()
         {
-            Dictionary<string, short> data = new Dictionary<string, short>();
+            _rawData.Clear();
 
             #region 블록읽기
             foreach (var blockRange in BlockRanges)
@@ -59,10 +74,10 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
                     readResult = _wordBlockReader.ReadBlock(blockRange);
 
                 if (!readResult.IsSuccessful)
-                    return Result<Dictionary<string, short>>.Fail(readResult.Message);
+                    return Result.Fail(readResult.Message);
 
                 foreach (var pair in readResult.Data)
-                    data[pair.Key] = pair.Value;
+                    _rawData[pair.Key] = pair.Value;
 
             }
             #endregion
@@ -72,14 +87,49 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             {
                 var result = _randomReader.ReadRandom(randomRange);
                 if (!result.IsSuccessful)
-                    return Result<Dictionary<string, short>>.Fail(result.Message);
+                    return Result.Fail(result.Message);
 
                 foreach (var pair in result.Data)
-                    data[pair.Key] = pair.Value;
+                    _rawData[pair.Key] = pair.Value;
             }
             #endregion
 
-            return Result<Dictionary<string, short>>.Success(data);
+            //값 변환
+            ProcessValue();
+
+            return Result.Success();
         }
+
+        private void ProcessValue()
+        {
+            _processedData.Clear();
+            foreach (var range in BlockRanges)
+            {
+                foreach(var label in range.OrderedDeviceLabels)
+                {
+                    List<short> values = new List<short>();
+                    foreach (var address in label.AddressStringList)
+                    {
+                        values.Add(_rawData[address]);
+                    }
+                    _processedData[label.Code] = label.ConvertValue(values);
+                }
+            }
+
+            foreach(var range in RandomRanges) 
+            {
+                foreach (var label in range.OrderedDeviceLabels)
+                {
+                    List<short> values = new List<short>();
+                    foreach (var address in label.AddressStringList)
+                    {
+                        values.Add(_rawData[address]);
+                    }
+                    _processedData[label.Code] = label.ConvertValue(values);
+                }
+            }
+        }
+
     }
 }
+

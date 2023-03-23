@@ -55,11 +55,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormAuto.cs">
+    <Compile Include="FormAutoRaw.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormAuto.Designer.cs">
-      <DependentUpon>FormAuto.cs</DependentUpon>
+    <Compile Include="FormAutoRaw.Designer.cs">
+      <DependentUpon>FormAutoRaw.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormAutoProcessed.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAutoProcessed.Designer.cs">
+      <DependentUpon>FormAutoProcessed.cs</DependentUpon>
     </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
@@ -73,12 +79,16 @@
     <Compile Include="FormMitsubishiTest.designer.cs">
       <DependentUpon>FormMitsubishiTest.cs</DependentUpon>
     </Compile>
-    <Compile Include="PlcValue.cs" />
+    <Compile Include="PlcObjValue.cs" />
+    <Compile Include="PlcRawValue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIExtensions.cs" />
-    <EmbeddedResource Include="FormAuto.resx">
-      <DependentUpon>FormAuto.cs</DependentUpon>
+    <EmbeddedResource Include="FormAutoRaw.resx">
+      <DependentUpon>FormAutoRaw.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAutoProcessed.resx">
+      <DependentUpon>FormAutoProcessed.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>

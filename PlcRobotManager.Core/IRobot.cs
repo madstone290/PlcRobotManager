@@ -36,10 +36,16 @@ namespace PlcRobotManager.Core
         Task StopAsync();
 
         /// <summary>
-        /// 현재 데이터를 읽어온다.
+        /// 가공된 데이터를 읽어온다.
         /// </summary>
         /// <returns></returns>
-        Dictionary<string, short> GetData();
+        Dictionary<string, object> GetProcessedData();
+
+        /// <summary>
+        /// 원본 데이터를 읽어온다.
+        /// </summary>
+        /// <returns></returns>
+        Dictionary<string, short> GetRawData();
 
     }
 }

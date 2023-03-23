@@ -12,17 +12,17 @@ using System.Windows.Forms;
 
 namespace PlcRobotManager.Ui
 {
-    public partial class FormAuto : Form
+    public partial class FormAutoProcessed : Form
     {
         private readonly System.Timers.Timer timer = new System.Timers.Timer();
 
-        public FormAuto()
+        public FormAutoProcessed()
         {
             InitializeComponent();
             RobotManager = Program.RobotManager;
         }
 
-        public List<PlcValue> PlcValues { get; set; } = new List<PlcValue>();
+        public List<PlcObjValue> PlcValues { get; set; } = new List<PlcObjValue>();
         public List<string> Robots { get; set; } = new List<string>();
         public string SelectedRobot { get; set; }
         public IRobotManager RobotManager { get; internal set; }
@@ -68,8 +68,8 @@ namespace PlcRobotManager.Ui
 
         private void RefreshRobotData()
         {
-            var rawData = RobotManager.GetRobotData(SelectedRobot);
-            var plcValues = rawData.Select(x => new PlcValue(x.Key, x.Value)).OrderBy(x => x.Address);
+            var rawData = RobotManager.GetProcessedRobotData(SelectedRobot);
+            var plcValues = rawData.Select(x => new PlcObjValue(x.Key, x.Value)).OrderBy(x => x.Address);
 
             PlcValues.Clear();
             PlcValues.AddRange(plcValues);

@@ -85,7 +85,7 @@ namespace PlcRobotManager.Ui
             string deviceName = Regex.Match(Address, "[a-zA-Z]{1,}").Value;
             int number = Convert.ToInt32(Regex.Match(Address, "[0-9]{1,}").Value);
             Device device = Device.FromName(deviceName);
-            var labels = Enumerable.Range(0, Length).Select(i => new DeviceLabel(device, number + i));
+            var labels = Enumerable.Range(0, Length).Select(i => new DeviceLabel((number + i).ToString(), device, number + i));
 
             sw.Restart();
             var result = reader.ReadBlock(new BlockRange(labels));
@@ -139,9 +139,10 @@ namespace PlcRobotManager.Ui
         {
             int eachCount = 100;
             int startAddress = 0;
-            var dlabels = Enumerable.Range(0, eachCount).Select(i => new DeviceLabel(Device.D, startAddress + (i * 5)));
-            var xlabels = Enumerable.Range(0, eachCount).Select(i => new DeviceLabel(Device.X, startAddress + (i * 5)));
-            var mlabels = Enumerable.Range(0, eachCount).Select(i => new DeviceLabel(Device.M, startAddress + (i * 5)));
+            int code = 0;
+            var dlabels = Enumerable.Range(0, eachCount).Select(i => new DeviceLabel(code++.ToString(), Device.D, startAddress + (i * 5)));
+            var xlabels = Enumerable.Range(0, eachCount).Select(i => new DeviceLabel(code++.ToString(), Device.X, startAddress + (i * 5)));
+            var mlabels = Enumerable.Range(0, eachCount).Select(i => new DeviceLabel(code++.ToString(), Device.M, startAddress + (i * 5)));
             var range = new RandomRange(dlabels.Concat(xlabels).Concat(mlabels));
             var randomReader = new RandomReader(_plc);
 
