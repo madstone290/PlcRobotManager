@@ -67,16 +67,16 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             #region 블록읽기
             foreach (var blockRange in BlockRanges)
             {
-                Result<Dictionary<string, short>> readResult;
+                Result<Dictionary<string, short>> result;
                 if (blockRange.IsBitBlock)
-                    readResult = _bitBlockReader.ReadBlock(blockRange);
+                    result = _bitBlockReader.ReadBlock(blockRange);
                 else
-                    readResult = _wordBlockReader.ReadBlock(blockRange);
+                    result = _wordBlockReader.ReadBlock(blockRange);
 
-                if (!readResult.IsSuccessful)
-                    return Result.Fail(readResult.Message);
+                if (!result.IsSuccessful)
+                    return Result.Fail(result.Message);
 
-                foreach (var pair in readResult.Data)
+                foreach (var pair in result.Data)
                     _rawData[pair.Key] = pair.Value;
 
             }
@@ -103,16 +103,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         private void ProcessValue()
         {
             _processedData.Clear();
-            foreach (var range in BlockRanges)
-            {
-                foreach(var label in range.OrderedDeviceLabels)
-                {
-                    List<short> rawValues = label.AddressStringList.Select(address => _rawData[address]).ToList();
-                    _processedData[label.Code] = label.ConvertValue(rawValues);
-                }
-            }
-
-            foreach(var range in RandomRanges) 
+            IEnumerable<IRange> entireRanges = BlockRanges.Cast<IRange>().Concat(RandomRanges.Cast<IRange>());
+            foreach (IRange range in entireRanges)
             {
                 foreach (var label in range.OrderedDeviceLabels)
                 {
@@ -120,6 +112,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
                     _processedData[label.Code] = label.ConvertValue(rawValues);
                 }
             }
+
         }
 
     }

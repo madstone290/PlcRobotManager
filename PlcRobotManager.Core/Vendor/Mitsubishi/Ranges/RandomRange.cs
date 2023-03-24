@@ -7,7 +7,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
     /// <summary>
     /// 랜덤읽기 범위
     /// </summary>
-    public class RandomRange
+    public class RandomRange : IRange
     {
         public RandomRange(IEnumerable<DeviceLabel> deviceLabels)
         {
@@ -33,6 +33,9 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
         /// 주소의 개수
         /// </summary>
         public int Length { get; }
+
+        RangeType IRange.Type => RangeType.Random;
+        IEnumerable<DeviceLabel> IRange.OrderedDeviceLabels => OrderedDeviceLabels;
 
         public override string ToString()
         {

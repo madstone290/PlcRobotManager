@@ -81,6 +81,7 @@
     <Compile Include="Vendor\Mitsubishi\NumberType.cs" />
     <Compile Include="Vendor\Mitsubishi\ProgOptions.cs" />
     <Compile Include="Vendor\Mitsubishi\Ranges\BlockRange.cs" />
+    <Compile Include="Vendor\Mitsubishi\Ranges\IRagne.cs" />
     <Compile Include="Vendor\Mitsubishi\Ranges\RandomRange.cs" />
     <Compile Include="Vendor\Mitsubishi\RangeType.cs" />
     <Compile Include="Vendor\Mitsubishi\Readers\BitBlockReader.cs" />

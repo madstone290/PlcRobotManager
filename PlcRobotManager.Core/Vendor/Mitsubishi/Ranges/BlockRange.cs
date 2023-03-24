@@ -7,7 +7,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
     /// <summary>
     /// 블록읽기에 사용할 블록 범위
     /// </summary>
-    public class BlockRange
+    public class BlockRange : IRange
     {
         public BlockRange(IEnumerable<DeviceLabel> deviceLabels)
         {
@@ -21,9 +21,9 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
 
             DeviceLabel min = OrderedDeviceLabels.First();
             DeviceLabel max = OrderedDeviceLabels.Last();
-            
+
             StartWordAddress = min.StartWordAddress;
-            Length = max.EndWordAddress - min.StartWordAddress+ 1;
+            Length = max.EndWordAddress - min.StartWordAddress + 1;
             StartWordAddressString = min.StartWordAddressString;
         }
 
@@ -56,6 +56,9 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Ranges
         /// 비트블록 여부
         /// </summary>
         public bool IsBitBlock { get; }
+
+        RangeType IRange.Type => RangeType.Block;
+        IEnumerable<DeviceLabel> IRange.OrderedDeviceLabels => OrderedDeviceLabels;
 
         public override string ToString()
         {
