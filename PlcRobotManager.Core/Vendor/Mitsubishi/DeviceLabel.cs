@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace PlcRobotManager.Core.Vendor.Mitsubishi
 {
@@ -8,11 +10,12 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
     /// </summary>
     public class DeviceLabel
     {
-        public DeviceLabel(string code, Device device, int address, int length = 1, int? bitPosition = null, GatheringGroup group = null)
+        public DeviceLabel(string code, Device device, int address, DataType dataType = DataType.Number, int length = 1, int? bitPosition = null, GatheringGroup group = null)
         {
             Code = code;
             Device = device;
             Address = address;
+            DataType = dataType;
             Length = length < 1 ? 1 : length;
 
             if (device.IsBit())
@@ -37,6 +40,11 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         /// </summary>
         public string Code { get; }
         
+        /// <summary>
+        /// 라벨 데이터 타입
+        /// </summary>
+        public DataType DataType { get; }
+
         /// <summary>
         /// 디바이스
         /// </summary>
@@ -96,17 +104,57 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         public bool IsBitValue => Device.IsBit() || BitPosition.HasValue;
 
         /// <summary>
+        /// 숫자 변환에 적용할 소수점 위치
+        /// </summary>
+        public int DecimalPoint { get; }
+
+        /// <summary>
         /// 라벨의 데이터 타입에 맞게 값을 변환한다.
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
         public object ConvertValue(IEnumerable<short> values)
         {
-            // Demo 
+            switch (DataType)
+            {
+                case DataType.Bit: 
+                    return ConvertToBit(values);
+                case DataType.String:
+                    return ConvertToString(values);
+                case DataType.Number:
+                default:
+                    return ConvertToNumber(values);
+            }
+        }
+
+        private bool ConvertToBit(IEnumerable<short> values)
+        {
+            return values.First() == 1;
+        }
+
+        private double ConvertToNumber(IEnumerable<short> values)
+        {
+            double number;
             if (Length == 1)
-                return values.First();
+                number = values.First();
             else
-                return values.First() * short.MaxValue + values.Skip(1).First();
+                number = values.First() * short.MaxValue + values.Skip(1).First();
+
+            double decimalPontParam = Math.Pow(10, DecimalPoint);
+            int intPart = (int)(number / decimalPontParam);
+            int decimalPart = (int)(number % decimalPontParam);
+            number = intPart + (decimalPart / decimalPontParam);
+            return number;
+        }
+
+        private string ConvertToString(IEnumerable<short> values)
+        {
+            string text = string.Empty;
+            foreach(short value in values)
+            {
+                text += Encoding.ASCII.GetString(BitConverter.GetBytes(value));
+            }
+            return text;
         }
 
         public override string ToString()

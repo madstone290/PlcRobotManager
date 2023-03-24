@@ -24,8 +24,8 @@ namespace PlcRobotManager.Core
             GatheringGroup group3 = new GatheringGroup("블록3", RangeType.Random);
             GatheringGroup group4 = new GatheringGroup("랜덤1", RangeType.Random);
             int codeNumber = 0;
-            var groupLabels1 = Enumerable.Range(5, 100).Select(i => new DeviceLabel("D" + (i * 2) + codeNumber++.ToString(), Device.D, i * 2, length: 2, group: group1));
-            var groupLabels2 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(codeNumber++.ToString(), Device.X, i, group: group2));
+            var groupLabels1 = Enumerable.Range(5, 100).Select(i => new DeviceLabel("D" + (i * 2) + codeNumber++.ToString(), Device.D, i * 2, dataType: DataType.String, length: 2, group: group1));
+            var groupLabels2 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(codeNumber++.ToString(), Device.X, i, dataType: DataType.Bit, group: group2));
             var groupLabels3 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(codeNumber++.ToString(), Device.D, i, bitPosition: (i % 16), group: group1));
             var groupLabels4 = Enumerable.Range(0, 100).Select(i =>
             {
