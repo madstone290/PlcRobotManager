@@ -107,12 +107,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             {
                 foreach(var label in range.OrderedDeviceLabels)
                 {
-                    List<short> values = new List<short>();
-                    foreach (var address in label.AddressStringList)
-                    {
-                        values.Add(_rawData[address]);
-                    }
-                    _processedData[label.Code] = label.ConvertValue(values);
+                    List<short> rawValues = label.AddressStringList.Select(address => _rawData[address]).ToList();
+                    _processedData[label.Code] = label.ConvertValue(rawValues);
                 }
             }
 
@@ -120,12 +116,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             {
                 foreach (var label in range.OrderedDeviceLabels)
                 {
-                    List<short> values = new List<short>();
-                    foreach (var address in label.AddressStringList)
-                    {
-                        values.Add(_rawData[address]);
-                    }
-                    _processedData[label.Code] = label.ConvertValue(values);
+                    List<short> rawValues = label.AddressStringList.Select(address => _rawData[address]).ToList();
+                    _processedData[label.Code] = label.ConvertValue(rawValues);
                 }
             }
         }
