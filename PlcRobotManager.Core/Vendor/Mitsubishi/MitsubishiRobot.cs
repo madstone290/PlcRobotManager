@@ -1,7 +1,6 @@
 ﻿using PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -69,14 +68,24 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         private readonly List<DeviceLabel> _deviceLabels = new List<DeviceLabel>();
 
         /// <summary>
+        /// 가공 데이터 접근을 위한 락커
+        /// </summary>
+        private readonly object _processedDataLocker = new object();
+
+        /// <summary>
+        /// 원본 데이터 접근을 위한 락커
+        /// </summary>
+        private readonly object _rawDataLocker = new object();
+
+        /// <summary>
         /// 로봇 데이터(가공)
         /// </summary>
-        private readonly ConcurrentDictionary<string, object> _processedData = new ConcurrentDictionary<string, object>();
+        private readonly Dictionary<string, object> _processedData = new Dictionary<string, object>();
 
         /// <summary>
         /// 로봇 데이터(원본)
         /// </summary>
-        private readonly ConcurrentDictionary<string, short> _rawData = new ConcurrentDictionary<string, short>();
+        private readonly Dictionary<string, short> _rawData = new Dictionary<string, short>();
 
         /// <summary>
         /// 읽기작업을 진행할 데이터 리더
@@ -85,7 +94,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
 
         public MitsubishiRobot(string name, IMitsubishiPlc plc, DataGathererType dataGathererType, IEnumerable<DeviceLabel> deviceLabels)
         {
-            if(deviceLabels == null) throw new ArgumentNullException(nameof(deviceLabels));
+            if (deviceLabels == null) throw new ArgumentNullException(nameof(deviceLabels));
 
             _name = name;
             _plc = plc;
@@ -96,7 +105,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
             switch (dataGathererType)
             {
                 case DataGathererType.Auto:
-                    _plcDataReader = new AutoDataGatherer(plc, deviceLabels);break;
+                    _plcDataReader = new AutoDataGatherer(plc, deviceLabels); break;
                 case DataGathererType.Random:
                     _plcDataReader = new RandomDataGatherer(plc, deviceLabels); break;
                 case DataGathererType.Manual:
@@ -172,8 +181,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
 
                     if (DataLoggingEnabled && (++readCycle % ActDataLoggingCycle == 0))
                     {
-                        var data = new Dictionary<string, object>(_processedData);
-                        var text = JsonConvert.SerializeObject(data);
+                        var text = JsonConvert.SerializeObject(GetRawData());
                         _logger.Info($"{_logId}  {text}");
                     }
                 }
@@ -215,23 +223,28 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
                 return false;
             }
 
-            foreach(var pair in _plcDataReader.RawData)
-            {
-                _rawData[pair.Key] = pair.Value;
-            }
-
-            foreach (var pair in _plcDataReader.ProcessedData)
-            {
-                _processedData[pair.Key] = pair.Value;
-            }
+            SetRawData(_plcDataReader.RawData);
+            SetProcessedData(_plcDataReader.ProcessedData);
 
             _totalReadCount++;
 
             // 데모 저장
-            if (_totalReadCount != 0 && _totalReadCount % 10 == 0)
-                Save?.Invoke(this, new Dictionary<string, object>(_processedData));
+            if (SaveRequired())
+            {
+                Save?.Invoke(this, GetProcessedData());
+            }
 
             return true;
+        }
+
+        /// <summary>
+        /// 저장 이벤트 발생여부를 확인한다.
+        /// </summary>
+        /// <returns></returns>
+        private bool SaveRequired()
+        {
+            // 디버그용
+            return _totalReadCount != 0 && _totalReadCount % 10 == 0;
         }
 
         private void Close()
@@ -269,12 +282,42 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
 
         public Dictionary<string, object> GetProcessedData()
         {
-            return new Dictionary<string, object>(_processedData);
+            var copy = new Dictionary<string, object>();
+            lock (_processedDataLocker)
+            {
+                foreach (var item in _processedData)
+                    copy.Add(item.Key, item.Value);
+            }
+            return copy;
+        }
+
+        private void SetProcessedData(IEnumerable<KeyValuePair<string, object>> data)
+        {
+            lock (_processedDataLocker)
+            {
+                foreach (var item in data)
+                    _processedData[item.Key] = item.Value;
+            }
         }
 
         public Dictionary<string, short> GetRawData()
         {
-            return new Dictionary<string, short>(_rawData);
+            var copy = new Dictionary<string, short>();
+            lock (_rawDataLocker)
+            {
+                foreach (var item in _rawData)
+                    copy.Add(item.Key, item.Value);
+            }
+            return copy;
+        }
+
+        private void SetRawData(IEnumerable<KeyValuePair<string, short>> data)
+        {
+            lock (_rawDataLocker)
+            {
+                foreach (var item in data)
+                    _rawData[item.Key] = item.Value;
+            }
         }
     }
 }
