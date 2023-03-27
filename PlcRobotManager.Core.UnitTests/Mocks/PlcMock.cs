@@ -2,7 +2,7 @@
 
 namespace PlcRobotManager.Core.UnitTests.Mockups
 {
-    public class PlcMockup : IMitsubishiPlc
+    public class PlcMock : IMitsubishiPlc
     {
         public Result Close()
         {

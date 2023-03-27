@@ -8,6 +8,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 {
     public abstract class BaseGatherer : IPlcDataGatherer
     {
+        private readonly ILogger _logger = LoggerFactory.GetLogger<BaseGatherer>();
+
         /// <summary>
         /// 읽기를 진행할 PLC
         /// </summary>
@@ -38,6 +40,26 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         /// </summary>
         protected readonly RandomReader _randomReader;
 
+        private readonly Subroutines.CycleTimeSubroutine routine1 = new Subroutines.CycleTimeSubroutine("test", "CycleTime1", 1);
+
+        public BaseGatherer(IMitsubishiPlc plc)
+        {
+            _plc = plc;
+            _wordBlockReader = new WordBlockReader(plc);
+            _bitBlockReader = new BitBlockReader(plc);
+            _randomReader = new RandomReader(plc);
+
+            routine1.CycleStarted += (s, count) =>
+            {
+                _logger.Debug($"CycleStarted {count}");
+            };
+            routine1.CycleEnded += (s, count) =>
+            {
+                _logger.Debug($"CycleEnded {count}");
+            };
+
+        }
+
         /// <summary>
         /// 블록읽기 목록
         /// </summary>
@@ -51,14 +73,6 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         public IReadOnlyDictionary<string, short> RawData => _rawData;
 
         public IReadOnlyDictionary<string, object> ProcessedData => _processedData;
-
-        public BaseGatherer(IMitsubishiPlc plc)
-        {
-            _plc = plc;
-            _wordBlockReader = new WordBlockReader(plc);
-            _bitBlockReader = new BitBlockReader(plc);
-            _randomReader = new RandomReader(plc);
-        }
 
         public Result Gather()
         {
@@ -94,8 +108,11 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             }
             #endregion
 
-            //값 변환
+            // 데이터 후처리
             ProcessValue();
+
+            // 서브루틴 상태 갱신
+            routine1.CheckCycle(_processedData);
 
             return Result.Success();
         }

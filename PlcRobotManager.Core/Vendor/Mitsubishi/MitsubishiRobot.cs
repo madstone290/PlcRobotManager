@@ -10,6 +10,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
 {
     public class MitsubishiRobot : IRobot
     {
+        private readonly Stopwatch readStopWatch = new Stopwatch();
+
         private readonly ILogger _logger = LoggerFactory.GetLogger<MitsubishiRobot>();
 
         /// <summary>
@@ -150,7 +152,6 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         {
             _plc.Initialize();
 
-            Stopwatch sw = new Stopwatch();
             /// 데이터 조회 완료횟수
             int readCycle = 0;
             while (true)
@@ -165,25 +166,24 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
 
                 if (_stop) break;
 
-                sw.Restart();
                 var readSuccess = ReadData();
-                _logger.Debug($"{_logId} ReadData ElapsedMilliseconds: {sw.ElapsedMilliseconds}");
-
-                if (!readSuccess)
+                if (!readSuccess) // 종료 후 재시도
                 {
                     Close();
                     SleepWithChecking(RECONNECT_MIL_SEC);
                     continue;
                 }
-                else
-                {
-                    _logger?.Debug($"{_logId} read data successfully");
 
-                    if (DataLoggingEnabled && (++readCycle % ActDataLoggingCycle == 0))
-                    {
-                        var text = JsonConvert.SerializeObject(GetRawData());
-                        _logger.Info($"{_logId}  {text}");
-                    }
+                _logger?.Debug($"{_logId} read data successfully");
+
+                // 저장 조건 확인
+                if (SaveRequired()) // 데모 저장
+                    Save?.Invoke(this, GetProcessedData());
+
+                if (DataLoggingEnabled && (++readCycle % ActDataLoggingCycle == 0))
+                {
+                    var text = JsonConvert.SerializeObject(GetRawData());
+                    _logger.Info($"{_logId}  {text}");
                 }
 
                 SleepWithChecking(WORK_IDLE_MIL_SEC + AdditionalIdleTime);
@@ -216,7 +216,11 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
 
         private bool ReadData()
         {
+            readStopWatch.Restart();
             var result = _plcDataReader.Gather();
+            _logger.Debug($"{_logId} ReadData ElapsedMilliseconds: {readStopWatch.ElapsedMilliseconds}");
+            readStopWatch.Reset();
+
             if (!result.IsSuccessful)
             {
                 _logger?.Error($"{_logId} [read failed] {result.Message}");
@@ -227,12 +231,6 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
             SetProcessedData(_plcDataReader.ProcessedData);
 
             _totalReadCount++;
-
-            // 데모 저장
-            if (SaveRequired())
-            {
-                Save?.Invoke(this, GetProcessedData());
-            }
 
             return true;
         }

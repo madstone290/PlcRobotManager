@@ -16,7 +16,7 @@ namespace PlcRobotManager.Core
 
             IMitsubishiPlc mitsubishiPlc = new MitsubishiPlc("Plc1", new ProgOptions()
             {
-                ActTargetSimulator = 1
+                ActTargetSimulator = 1,
             });
 
             GatheringGroup group1 = new GatheringGroup("블록1", RangeType.Random);
@@ -24,7 +24,12 @@ namespace PlcRobotManager.Core
             GatheringGroup group3 = new GatheringGroup("블록3", RangeType.Random);
             GatheringGroup group4 = new GatheringGroup("랜덤1", RangeType.Random);
             int codeNumber = 0;
-            var groupLabels1 = Enumerable.Range(5, 100).Select(i => new DeviceLabel("D" + (i * 2) + codeNumber++.ToString(), Device.D, i * 2, dataType: DataType.String, length: 2, group: group1));
+            var groupLabels1 = Enumerable.Range(0, 100).Select(i => {
+                if (i == 0)
+                    return new DeviceLabel("CycleTime1", Device.D, 0, dataType: DataType.Number, length: 1, group: group1);
+                else 
+                    return new DeviceLabel("D value " + codeNumber++.ToString(), Device.D, i * 2, dataType: DataType.String, length: 2, group: group1);
+            });
             var groupLabels2 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(codeNumber++.ToString(), Device.X, i, dataType: DataType.Bit, group: group2));
             var groupLabels3 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(codeNumber++.ToString(), Device.D, i, bitPosition: (i % 16), group: group1));
             var groupLabels4 = Enumerable.Range(0, 100).Select(i =>
@@ -40,7 +45,7 @@ namespace PlcRobotManager.Core
 
             var robots = Enumerable.Range(1, robotCount).Select(x => new MitsubishiRobot(x.ToString(), mitsubishiPlc, DataGathererType.Manual, allLabels)
             {
-                AdditionalIdleTime = 1000,
+                AdditionalIdleTime = 5 * 1000,
                 DataLoggingEnabled = true,
                 DataLoggingCycle = 1
             }).ToList();

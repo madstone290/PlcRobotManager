@@ -53,9 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlockRangeTests.cs" />
-    <Compile Include="Mockups\PlcMockup.cs" />
+    <Compile Include="Mocks\PlcMock.cs" />
     <Compile Include="AutoDataGathererSortTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SubroutineTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlcRobotManager.Core\PlcRobotManager.Core.csproj">

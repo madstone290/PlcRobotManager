@@ -89,6 +89,9 @@
     <Compile Include="Vendor\Mitsubishi\Readers\BlockReader.cs" />
     <Compile Include="Vendor\Mitsubishi\Readers\RandomReader.cs" />
     <Compile Include="Vendor\Mitsubishi\Readers\WordBlockReader.cs" />
+    <Compile Include="Vendor\Mitsubishi\ISubroutine.cs" />
+    <Compile Include="Vendor\Mitsubishi\SubroutineDetectionType.cs" />
+    <Compile Include="Vendor\Mitsubishi\Subroutines\CycleTimeSubroutine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -117,5 +120,6 @@
     <Content Include="Dlls\ActProgType.dll" />
     <Content Include="Dlls\ActSupportMsg.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
