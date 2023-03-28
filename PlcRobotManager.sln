@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlcRobotManager.Ui", "PlcRo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlcRobotManager.Core.UnitTests", "PlcRobotManager.Core.UnitTests\PlcRobotManager.Core.UnitTests.csproj", "{EE478114-DDFD-4F24-B6FA-2C4EE692CC06}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlcRobotManager.Util", "PlcRobotManager.Util\PlcRobotManager.Util.csproj", "{ADAAC323-D7EB-44C2-8C62-9AE61E52C4CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{EE478114-DDFD-4F24-B6FA-2C4EE692CC06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE478114-DDFD-4F24-B6FA-2C4EE692CC06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE478114-DDFD-4F24-B6FA-2C4EE692CC06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADAAC323-D7EB-44C2-8C62-9AE61E52C4CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADAAC323-D7EB-44C2-8C62-9AE61E52C4CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADAAC323-D7EB-44C2-8C62-9AE61E52C4CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADAAC323-D7EB-44C2-8C62-9AE61E52C4CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
