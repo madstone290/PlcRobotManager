@@ -170,7 +170,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
 
         public class SubroutineInfo
         {
-            public SubroutineInfo(string name, SubroutineDetectionType detectionType, bool isStart, bool isEnd)
+            public SubroutineInfo(string name, SubroutineDetectionType detectionType, bool isStart = false, bool isEnd = false)
             {
                 Name = name;
                 DetectionType = detectionType;

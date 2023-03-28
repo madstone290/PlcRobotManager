@@ -1,5 +1,6 @@
 ﻿using PlcRobotManager.Core.Vendor.Mitsubishi.Ranges;
 using PlcRobotManager.Core.Vendor.Mitsubishi.Readers;
+using PlcRobotManager.Core.Vendor.Mitsubishi.Subroutines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +46,12 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         /// </summary>
         protected readonly RandomReader _randomReader;
 
-        private readonly Subroutines.CycleTimeSubroutine routine1 = new Subroutines.CycleTimeSubroutine("test", "CycleTime1", 1);
+        /// <summary>
+        /// 서브루틴 팩토리
+        /// </summary>
+        private readonly SubroutineFactory _subroutineFactory = new SubroutineFactory();
+
+        private readonly List<ISubroutine> _subroutines = new List<ISubroutine>();
 
         public BaseGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels)
         {
@@ -55,14 +61,22 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             _bitBlockReader = new BitBlockReader(plc);
             _randomReader = new RandomReader(plc);
 
-            routine1.CycleStarted += (s, count) =>
+            var subroutineLabels = _deviceLabels.Where(x => x.Subroutine != null);
+            // ** 싱글서브루틴만 적용. 복합서브루틴은 미적용.
+            foreach(var label in subroutineLabels)
             {
-                _logger.Debug($"CycleStarted {count}");
-            };
-            routine1.CycleEnded += (s, count) =>
-            {
-                _logger.Debug($"CycleEnded {count}");
-            };
+                 ISubroutine subroutine = _subroutineFactory.Create(label.Subroutine.DetectionType, label.Subroutine.Name, label.Code);
+                _subroutines.Add(subroutine);
+
+                subroutine.CycleStarted += (s, count) =>
+                {
+                    _logger.Debug($"CycleStarted Name:{subroutine.Name} Count:{count}");
+                };
+                subroutine.CycleEnded += (s, count) =>
+                {
+                    _logger.Debug($"CycleEnded Name:{subroutine.Name} Count:{count}");
+                };
+            }
 
         }
 
@@ -118,7 +132,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             ProcessValue();
 
             // 서브루틴 상태 갱신
-            routine1.CheckCycle(_processedData);
+            foreach(ISubroutine subroutine in _subroutines)
+                subroutine.CheckCycle(_processedData);
 
             return Result.Success();
         }
