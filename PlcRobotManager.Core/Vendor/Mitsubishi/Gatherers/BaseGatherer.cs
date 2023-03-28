@@ -16,6 +16,11 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         protected readonly IMitsubishiPlc _plc;
 
         /// <summary>
+        /// 데이터 수집에 사용할 라벨목록. 주소순으로 정렬되어 있다.
+        /// </summary>
+        protected readonly List<DeviceLabel> _deviceLabels = new List<DeviceLabel>();
+
+        /// <summary>
         /// 원본 데이터. 주소/값 쌍
         /// </summary>
         protected readonly Dictionary<string, short> _rawData = new Dictionary<string, short>();
@@ -42,9 +47,10 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 
         private readonly Subroutines.CycleTimeSubroutine routine1 = new Subroutines.CycleTimeSubroutine("test", "CycleTime1", 1);
 
-        public BaseGatherer(IMitsubishiPlc plc)
+        public BaseGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels)
         {
             _plc = plc;
+            _deviceLabels.AddRange(deviceLabels.OrderBy(x=> x.AddressString));
             _wordBlockReader = new WordBlockReader(plc);
             _bitBlockReader = new BitBlockReader(plc);
             _randomReader = new RandomReader(plc);

@@ -11,24 +11,17 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
     /// </summary>
     public class AutoDataGatherer : BaseGatherer
     {
-        /// <summary>
-        /// 디바이스 목록
-        /// </summary>
-        private readonly List<DeviceLabel> _deviceLabels = new List<DeviceLabel>();
-
         private readonly List<BlockRange> _blockRanges = new List<BlockRange>();
 
         private readonly List<RandomRange> _randomRanges= new List<RandomRange>();
 
 
         public AutoDataGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels)
-            : base(plc)
+            : base(plc, deviceLabels)
         {
-            _deviceLabels.AddRange(deviceLabels.OrderBy(x => x.AddressString));
-
             // 디바이스기준으로 분류한 다음 개수에 따라 블록읽기와 랜덤읽기로 나눈다.
             var sorter = new Sorter();
-            var ranges = sorter.Sort(deviceLabels);
+            var ranges = sorter.Sort(_deviceLabels);
 
             _blockRanges.AddRange(ranges.Item1);
             _randomRanges.AddRange(ranges.Item2);

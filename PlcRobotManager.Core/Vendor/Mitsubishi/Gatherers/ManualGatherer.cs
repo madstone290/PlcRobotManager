@@ -18,7 +18,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 
         private readonly List<RandomRange> _randomRanges = new List<RandomRange>();
 
-        public ManualGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels) : base(plc)
+        public ManualGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels) : base(plc, deviceLabels)
         {
             var labelGroups = deviceLabels.GroupBy(x => x.Group);
             foreach (var labelGroup in labelGroups)

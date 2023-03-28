@@ -11,13 +11,6 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
     /// </summary>
     public class RandomDataGatherer : BaseGatherer
     {
-    
-
-        /// <summary>
-        /// 디바이스 목록
-        /// </summary>
-        private readonly List<DeviceLabel> _deviceLabels = new List<DeviceLabel>();
-
         private readonly List<RandomRange> _randomRanges = new List<RandomRange>();
 
         /// <summary>
@@ -25,10 +18,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         /// </summary>
         private int _readLength = 500;
 
-        public RandomDataGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels) : base(plc)
+        public RandomDataGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels) : base(plc, deviceLabels)
         {
-            _deviceLabels.AddRange(deviceLabels.OrderBy(x => x.AddressString));
-
             int taken = 0;
             while (taken < _deviceLabels.Count)
             {
