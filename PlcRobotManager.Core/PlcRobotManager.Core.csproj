@@ -102,6 +102,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Dlls\ActProgType.dll" />
+    <Content Include="Dlls\ActSupportMsg.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <COMReference Include="ActProgTypeLib">
       <Guid>{CD7846DF-1C99-4BC0-8A8D-FBFB7FC26ACB}</Guid>
       <VersionMajor>1</VersionMajor>
@@ -121,10 +125,5 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Dlls\ActProgType.dll" />
-    <Content Include="Dlls\ActSupportMsg.dll" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
