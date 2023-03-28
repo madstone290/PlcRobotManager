@@ -56,7 +56,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
         public BaseGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels)
         {
             _plc = plc;
-            _deviceLabels.AddRange(deviceLabels.OrderBy(x=> x.AddressString));
+            _deviceLabels.AddRange(deviceLabels.OrderBy(x=> x, DeviceLabel.Comparer.Default));
             _wordBlockReader = new WordBlockReader(plc);
             _bitBlockReader = new BitBlockReader(plc);
             _randomReader = new RandomReader(plc);

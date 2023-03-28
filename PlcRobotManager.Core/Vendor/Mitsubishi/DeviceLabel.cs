@@ -40,7 +40,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         /// 라벨 식별을 위한 코드. 중복이 허용되지 않는다.
         /// </summary>
         public string Code { get; }
-        
+
         /// <summary>
         /// 라벨 데이터 타입
         /// </summary>
@@ -123,7 +123,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         {
             switch (DataType)
             {
-                case DataType.Bit: 
+                case DataType.Bit:
                     return ConvertToBit(values);
                 case DataType.String:
                     return ConvertToString(values);
@@ -156,7 +156,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         private string ConvertToString(IEnumerable<short> values)
         {
             string text = string.Empty;
-            foreach(short value in values)
+            foreach (short value in values)
             {
                 text += Encoding.ASCII.GetString(BitConverter.GetBytes(value));
             }
@@ -197,6 +197,32 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
             /// 루틴의 종료를 알리는 값인가?
             /// </summary>
             public bool IsEnd { get; }
+        }
+
+        /// <summary>
+        /// 라벨 비교. 디바이스, 주소, 비트여부, 코드순으로 정렬한다.
+        /// </summary>
+        public class Comparer : IComparer<DeviceLabel>
+        {
+            public static Comparer Default { get; } = new Comparer();
+
+            public int Compare(DeviceLabel x, DeviceLabel y)
+            {
+                if (x.Device != y.Device)
+                    return x.Device.Name.CompareTo(y.Device.Name);
+
+                if (x.Address != y.Address)
+                    return x.Address.CompareTo(y.Address);
+
+                if (x.BitPosition.HasValue && y.BitPosition.HasValue)
+                    return x.BitPosition.Value.CompareTo(y.BitPosition.Value);
+                else if (x.BitPosition.HasValue)
+                    return 1;
+                else if (y.BitPosition.HasValue)
+                    return -1;
+                else
+                    return x.Code.CompareTo(y.Code);
+            }
         }
 
     }

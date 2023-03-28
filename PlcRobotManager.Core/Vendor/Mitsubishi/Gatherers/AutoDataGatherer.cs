@@ -102,7 +102,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             private List<List<DeviceLabel>> DivideByMaxBlockSize(IEnumerable<DeviceLabel> deviceLabels, int maxBlockSize)
             {
                 List<List<DeviceLabel>> blockGroups = new List<List<DeviceLabel>>();
-                IEnumerable<DeviceLabel> orderedLabels = deviceLabels.OrderBy(x => x.Address);
+                IEnumerable<DeviceLabel> orderedLabels = deviceLabels.OrderBy(x => x, DeviceLabel.Comparer.Default);
 
                 DeviceLabel first = orderedLabels.First();
                 DeviceLabel last = orderedLabels.Last();
