@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PlcRobotManager.Core.Vendor.Mitsubishi;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PlcRobotManager.Core
@@ -14,6 +15,21 @@ namespace PlcRobotManager.Core
         Task RunAsync();
 
         Task StopAsync();
+
+        /// <summary>
+        /// PLC에 등록된 라벨을 가져온다.
+        /// </summary>
+        /// <param name="robotName"></param>
+        /// <param name="plcName"></param>
+        /// <returns></returns>
+        List<DeviceLabel> GetDeviceLabels(string robotName, string plcName);
+
+        /// <summary>
+        /// 로봇에 등록된 PLC목록을 가져온다.
+        /// </summary>
+        /// <param name="robotName"></param>
+        /// <returns></returns>
+        List<string> GetPlcNames(string robotName);
 
         /// <summary>
         /// 주어진 로봇의 가공 데이터를 읽어온다

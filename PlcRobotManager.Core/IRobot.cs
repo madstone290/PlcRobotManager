@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PlcRobotManager.Core.Vendor.Mitsubishi;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -46,6 +47,7 @@ namespace PlcRobotManager.Core
         /// </summary>
         /// <returns></returns>
         Dictionary<string, short> GetRawData();
-
+        List<string> GetPlcNames();
+        List<DeviceLabel> GetDeviceLabels();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PlcRobotManager.Core.Vendor.Mitsubishi;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -58,9 +59,7 @@ namespace PlcRobotManager.Core.Impl
 
         public Dictionary<string, object> GetProcessedRobotData(string robotName)
         {
-            if(robotName == null)
-                return new Dictionary<string, object>();
-            if (!_robots.TryGetValue(robotName, out var robot))
+            if (robotName == null || !_robots.TryGetValue(robotName, out var robot))
                 return new Dictionary<string, object>();
 
             return robot.GetProcessedData();
@@ -68,12 +67,26 @@ namespace PlcRobotManager.Core.Impl
 
         public Dictionary<string, short> GetRawRobotData(string robotName)
         {
-            if (robotName == null)
-                return new Dictionary<string, short>();
-            if (!_robots.TryGetValue(robotName, out var robot))
+            if (robotName == null || !_robots.TryGetValue(robotName, out var robot))
                 return new Dictionary<string, short>();
 
             return robot.GetRawData();
+        }
+
+        public List<DeviceLabel> GetDeviceLabels(string robotName, string plcName)
+        {
+            if (robotName == null || !_robots.TryGetValue(robotName, out var robot))
+                return new List<DeviceLabel>();
+
+            return robot.GetDeviceLabels();
+        }
+
+        public List<string> GetPlcNames(string robotName)
+        {
+            if (robotName == null || !_robots.TryGetValue(robotName, out var robot))
+                return new List<string>();
+
+            return robot.GetPlcNames();
         }
     }
 }

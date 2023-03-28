@@ -4,6 +4,8 @@ namespace PlcRobotManager.Core.UnitTests.Mockups
 {
     public class PlcMock : IMitsubishiPlc
     {
+        public string Name => throw new System.NotImplementedException();
+
         public Result Close()
         {
             throw new System.NotImplementedException();

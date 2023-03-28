@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace PlcRobotManager.Core.Vendor.Mitsubishi
 {
@@ -316,6 +317,16 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
                 foreach (var item in data)
                     _rawData[item.Key] = item.Value;
             }
+        }
+
+        public List<string> GetPlcNames()
+        {
+            return new List<string>() { _plc.Name };
+        }
+
+        public List<DeviceLabel> GetDeviceLabels()
+        {
+            return _deviceLabels.ToList();
         }
     }
 }

@@ -3,6 +3,11 @@
     public interface IMitsubishiPlc
     {
         /// <summary>
+        /// PLC 이름
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// 초기화 작업을 수행한다
         /// </summary>
         void Initialize();

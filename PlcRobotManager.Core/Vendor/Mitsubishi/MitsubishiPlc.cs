@@ -39,6 +39,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
             _options = options;
             _logId = $"[MitsubishiPlc:{_name}]";
         }
+
+        public string Name => _name;
     
         /// <summary>
         /// 초기화 작업을 수행한다.
