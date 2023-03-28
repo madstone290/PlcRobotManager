@@ -54,7 +54,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitUtil.cs" />
-    <Compile Include="Demo.cs" />
+    <Compile Include="Extensions\StepRange.cs" />
+    <Compile Include="Infos\DeviceLabelInfo.cs" />
+    <Compile Include="Infos\PlcInfo.cs" />
+    <Compile Include="Infos\RobotInfo.cs" />
+    <Compile Include="RobotManagerHelper.cs" />
     <Compile Include="IDataManager.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="Impl\DummyDataManager.cs" />

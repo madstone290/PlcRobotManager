@@ -20,14 +20,14 @@ namespace PlcRobotManager.Ui
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ThreadException += Application_ThreadException;
 
-            var robotManager = Demo.Run(1).GetAwaiter().GetResult();
+            var robotManager = RobotManagerHelper.RunPredefined().GetAwaiter().GetResult();
             RobotManager = robotManager;
 
             var form = new FormMain();
 
             form.FormClosed += async (s, e) =>
             {
-                await Demo.Stop(robotManager);
+                await RobotManagerHelper.Stop(robotManager);
             };
 
             Application.Run(form);

@@ -1,62 +1,191 @@
-﻿using PlcRobotManager.Core.Impl;
+﻿using PlcRobotManager.Core.Extensions;
+using PlcRobotManager.Core.Impl;
+using PlcRobotManager.Core.Infos;
 using PlcRobotManager.Core.Vendor.Mitsubishi;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace PlcRobotManager.Core
 {
-    public static class Demo
+    public static class RobotManagerHelper
     {
-        public static async Task<IRobotManager> Run(int robotCount = 1)
+        public static async Task<IRobotManager> RunPredefined()
         {
-            IDataManager dataManager = new DummyDataManager();
-            IRobotManager robotManager = new RobotManager();
-            robotManager.DataManager = dataManager;
-
-            IMitsubishiPlc mitsubishiPlc = new MitsubishiPlc("Plc1", new ProgOptions()
-            {
-                ActTargetSimulator = 1,
-            });
-
-
-
-            GatheringGroup group1 = new GatheringGroup("블록1", RangeType.Random);
-            GatheringGroup group2 = new GatheringGroup("블록2", RangeType.Block);
-            GatheringGroup group3 = new GatheringGroup("블록3", RangeType.Random);
-            GatheringGroup group4 = new GatheringGroup("랜덤1", RangeType.Random);
-
-
-
             int codeNumber = 1;
             Func<string> getUniqueId = new Func<string>(() => (codeNumber++).ToString().PadLeft(5, '0'));
-            var routines = new DeviceLabel[]
-            {
-                new DeviceLabel("공정1사이클타임", Device.D, 0, dataType: DataType.Number, length: 1, group: group1,
-                        subroutine: new DeviceLabel.SubroutineInfo("테스트공정1", SubroutineDetectionType.CycleTime)),
-                new DeviceLabel("공정2사이클타임", Device.D, 1, dataType: DataType.Number, length: 1, group: group1,
-                        subroutine: new DeviceLabel.SubroutineInfo("테스트공정2", SubroutineDetectionType.CycleTime)),
-            };
-            var groupLabels1 = Enumerable.Range(0, 100).Select(i => new DeviceLabel(getUniqueId(), Device.D, i * 2, dataType: DataType.String, length: 2, group: group1));
-            var groupLabels2 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(getUniqueId(), Device.X, i, dataType: DataType.Bit, group: group2));
-            var groupLabels3 = Enumerable.Range(5, 100).Select(i => new DeviceLabel(getUniqueId(), Device.D, i, bitPosition: (i % 16), group: group1));
-            var groupLabels4 = Enumerable.Range(0, 100).Select(i =>
-            {
-                if (i % 3 == 0)
-                    return new DeviceLabel(getUniqueId(), Device.M, i * 3, group: group4);
-                else if (i % 3 == 1)
-                    return new DeviceLabel(getUniqueId(), Device.L, i * 3, group: group4);
-                else
-                    return new DeviceLabel(getUniqueId(), Device.Y, i * 3, group: group4);
-            });
-            var allLabels = routines.Concat(groupLabels1).Concat(groupLabels2).Concat(groupLabels3).Concat(groupLabels4).ToList();
 
-            var robots = Enumerable.Range(1, robotCount).Select(x => new MitsubishiRobot(x.ToString(), mitsubishiPlc, DataGathererType.Manual, allLabels)
+            List<RobotInfo> robotInfos = new List<RobotInfo>()
             {
-                AdditionalIdleTime = 5 * 1000,
-                DataLoggingEnabled = true,
-                DataLoggingCycle = 1
-            }).ToList();
+                new RobotInfo()
+                {
+                    Name = "Robot #1",
+                    DataLoggingCycle = 10,
+                    DataLoggingEnabled = true,
+                    AdditionalIdleTime = 3 * 1000,
+                    GathererType = DataGathererType.Manual,
+                    PlcInfos = new List<PlcInfo>()
+                    {
+                        new PlcInfo()
+                        {
+                            Name = "Plc #1",
+                            ActTargetSimulator = 1,
+                            DeviceLabelInfos = new List<DeviceLabelInfo>()
+                            {
+                                new DeviceLabelInfo() // 공정1
+                                {
+                                    Code = "Process #1 Cycle",
+                                    DeviceName = "D",
+                                    Address = 0,
+                                    DataType = DataType.Number,
+                                    Length = 1,
+                                    BitPosition = null,
+
+                                    GatheringGroupName = "GroupD",
+                                    GatheringGroupRangeType = RangeType.Block,
+
+                                    SubroutineName = "Process #1",
+                                    SubroutineDetectionType = SubroutineDetectionType.CycleTime,
+                                },
+                                new DeviceLabelInfo() // 공정2
+                                {
+                                    Code = "Process #2 Cycle",
+                                    DeviceName = "D",
+                                    Address = 1,
+                                    DataType = DataType.Number,
+                                    Length = 1,
+                                    GatheringGroupName = "GroupD",
+                                    GatheringGroupRangeType = RangeType.Block,
+                                    SubroutineName = "Process #2",
+                                    SubroutineDetectionType = SubroutineDetectionType.CycleTime,
+                                }
+                            }
+                            .Concat(StepRange.For(0, 50).Select(i => // 길이 1짜리 D주소 50개
+                                new DeviceLabelInfo()
+                                {
+                                    Code = getUniqueId(),
+                                    DataType = DataType.Number,
+                                    DeviceName= "D",
+                                    Address = i,
+                                    Length = 1,
+                                    GatheringGroupName = "GroupD",
+                                    GatheringGroupRangeType = RangeType.Block,
+                                }))
+                            .Concat(StepRange.For(50, 25, 2).Select(i => // 길이 2짜리 D주소 25개
+                                new DeviceLabelInfo()
+                                {
+                                    Code = getUniqueId(),
+                                    DataType = DataType.Number,
+                                    DeviceName= "D",
+                                    Address = i,
+                                    Length = 2,
+                                    GatheringGroupName = "GroupD",
+                                    GatheringGroupRangeType = RangeType.Block,
+                                }))
+                            .Concat(StepRange.For(100, 10).SelectMany(i => // 비트 D주소. 100~109. 각 주소당 16개 비트.
+                            {
+                                return StepRange.For(0, 16).Select(bit =>
+                                    new DeviceLabelInfo()
+                                    {
+                                        Code = getUniqueId(),
+                                        DataType = DataType.Bit,
+                                        DeviceName = "D",
+                                        Address = i,
+                                        BitPosition = bit % 16,
+                                        GatheringGroupName = "GroupD",
+                                        GatheringGroupRangeType = RangeType.Block,
+                                    });
+                            }))
+                            .Concat(StepRange.For(110, 2, 10).Select(i => // D110부터 길이10 문자열 2개
+                                new DeviceLabelInfo()
+                                {
+                                    Code = getUniqueId(),
+                                    DataType = DataType.String,
+                                    DeviceName = "D",
+                                    Address = i,
+                                    Length = 10,
+                                    GatheringGroupName = "GroupR",
+                                    GatheringGroupRangeType = RangeType.Random,
+                                }))
+                            .Concat(StepRange.For(0, 100).Select(i => 
+                                new DeviceLabelInfo()
+                                {
+                                    Code = getUniqueId(),
+                                    DataType = DataType.Bit,
+                                    DeviceName = "X",
+                                    Address = i,
+                                    GatheringGroupName = "GroupX",
+                                    GatheringGroupRangeType = RangeType.Block,
+                                }))
+                            .Concat(StepRange.For(3, 100).Select(i =>
+                                new DeviceLabelInfo()
+                                {
+                                    Code = getUniqueId(),
+                                    DataType = DataType.Bit,
+                                    DeviceName = "M",
+                                    Address = i,
+                                    GatheringGroupName = "GroupM",
+                                    GatheringGroupRangeType = RangeType.Block,
+                                }))
+                            .ToList()
+                        }
+                    }
+                }
+            };
+            return await Run(robotInfos);
+        }
+
+        public static async Task<IRobotManager> Run(IEnumerable<RobotInfo> robotInfos, IDataManager dataManager = null)
+        {
+            IRobotManager robotManager = new RobotManager
+            {
+                DataManager = dataManager ?? new DummyDataManager()
+            };
+
+            Dictionary<string, IMitsubishiPlc> plcCache = new Dictionary<string, IMitsubishiPlc>();
+
+            List<IRobot> robots = robotInfos.Select(robotInfo =>
+            {
+                PlcInfo plcInfo = robotInfo.PlcInfos.First();
+                if (!plcCache.TryGetValue(plcInfo.Name, out IMitsubishiPlc plc))
+                {
+                    plc = new MitsubishiPlc(plcInfo.Name, new ProgOptions()
+                    {
+                        ActTargetSimulator = plcInfo.ActTargetSimulator,
+                    });
+                    plcCache.Add(plcInfo.Name, plc);
+                }
+
+                List<GatheringGroup> groups = plcInfo.DeviceLabelInfos
+                    .GroupBy(labelInfo => labelInfo.GatheringGroupName)
+                    .Select(group => new GatheringGroup(group.Key, group.First().GatheringGroupRangeType))
+                    .ToList();
+
+                List<DeviceLabel> deviceLabels = plcInfo.DeviceLabelInfos.Select(label =>
+                    new DeviceLabel(label.Code,
+                        Device.FromName(label.DeviceName),
+                        label.Address,
+                        dataType: label.DataType,
+                        length: label.Length,
+                        bitPosition: label.BitPosition,
+                        group: groups.FirstOrDefault(group => group.Name == label.GatheringGroupName),
+                        subroutine: string.IsNullOrWhiteSpace(label.SubroutineName)
+                            ? null
+                            : new DeviceLabel.SubroutineInfo(label.SubroutineName,
+                                                         label.SubroutineDetectionType,
+                                                         label.SubroutineIsStart,
+                                                         label.SubroutineIsEnd)
+                    )).ToList();
+
+                return new MitsubishiRobot(robotInfo.Name, plc, robotInfo.GathererType, deviceLabels)
+                {
+                    AdditionalIdleTime = robotInfo.AdditionalIdleTime,
+                    DataLoggingEnabled = robotInfo.DataLoggingEnabled,
+                    DataLoggingCycle = robotInfo.DataLoggingCycle
+                };
+            }).Cast<IRobot>().ToList();
+
             robotManager.SetUp(robots);
             await robotManager.RunAsync();
 
@@ -65,14 +194,13 @@ namespace PlcRobotManager.Core
 
         public static async Task Stop(IRobotManager robotManager)
         {
-
             await robotManager.StopAsync();
 
-            Console.WriteLine("Iam exiting");
+            Console.WriteLine("Robot manager is exiting");
 
             foreach (var robot in robotManager.Robots.Cast<MitsubishiRobot>())
             {
-                Console.WriteLine($"{robot.Name} : {robot.TotalReadCount}");
+                Console.WriteLine($"Robot: {robot.Name} has count: {robot.TotalReadCount}");
             }
         }
     }
