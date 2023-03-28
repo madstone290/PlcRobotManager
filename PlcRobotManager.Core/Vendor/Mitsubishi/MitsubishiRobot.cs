@@ -324,7 +324,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
             return new List<string>() { _plc.Name };
         }
 
-        public List<DeviceLabel> GetDeviceLabels()
+        public List<DeviceLabel> GetDeviceLabels(string plc)
         {
             return _deviceLabels.ToList();
         }

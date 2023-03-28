@@ -91,8 +91,9 @@
             // 
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
+            this.gridView1.OptionsView.ColumnAutoWidth = false;
             // 
-            // FormAuto
+            // FormAutoProcessed
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -100,7 +101,7 @@
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.gridControl2);
             this.Controls.Add(this.flowLayoutPanel1);
-            this.Name = "FormAuto";
+            this.Name = "FormAutoProcessed";
             this.Text = "Form1";
             this.flowLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl2)).EndInit();

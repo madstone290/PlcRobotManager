@@ -78,7 +78,7 @@ namespace PlcRobotManager.Core.Impl
             if (robotName == null || !_robots.TryGetValue(robotName, out var robot))
                 return new List<DeviceLabel>();
 
-            return robot.GetDeviceLabels();
+            return robot.GetDeviceLabels(plcName);
         }
 
         public List<string> GetPlcNames(string robotName)

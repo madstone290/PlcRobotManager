@@ -47,7 +47,18 @@ namespace PlcRobotManager.Core
         /// </summary>
         /// <returns></returns>
         Dictionary<string, short> GetRawData();
+        
+        /// <summary>
+        /// 전체 PLC목록을 불러온다.
+        /// </summary>
+        /// <returns></returns>
         List<string> GetPlcNames();
-        List<DeviceLabel> GetDeviceLabels();
+
+        /// <summary>
+        /// PLC에 등록된 라벨목록을 불러온다.
+        /// </summary>
+        /// <param name="plc"></param>
+        /// <returns></returns>
+        List<DeviceLabel> GetDeviceLabels(string plc);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using PlcRobotManager.Core;
+using PlcRobotManager.Core.Vendor.Mitsubishi;
 using PlcRobotManager.Ui;
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,11 @@ namespace PlcRobotManager.Ui.Views.Auto
 
         public List<PlcObjValue> PlcValues { get; set; } = new List<PlcObjValue>();
         public List<string> Robots { get; set; } = new List<string>();
+
         public string SelectedRobot { get; set; }
         public IRobotManager RobotManager { get; internal set; }
+
+        public Dictionary<string, List<DeviceLabel>> RobotLabels { get; set; } = new Dictionary<string, List<DeviceLabel>>();
 
         protected override void OnLoad(EventArgs e)
         {
@@ -43,6 +47,13 @@ namespace PlcRobotManager.Ui.Views.Auto
             if (RobotManager != null)
             {
                 Robots.AddRange(RobotManager.Robots.Select(x => x.Name));
+
+                foreach(var robot in Robots)
+                {
+                    var plc = RobotManager.GetPlcNames(robot).First();
+                    RobotLabels.Add(robot, RobotManager.GetDeviceLabels(robot, plc));
+                }
+
                 gridControl2.RefreshDataSource();
                 gridView2.FocusedRowHandle = 0;
             }
@@ -69,7 +80,14 @@ namespace PlcRobotManager.Ui.Views.Auto
         private void RefreshRobotData()
         {
             var rawData = RobotManager.GetProcessedRobotData(SelectedRobot);
-            var plcValues = rawData.Select(x => new PlcObjValue(x.Key, x.Value)).OrderBy(x => x.Address);
+
+            if (!RobotLabels.ContainsKey(SelectedRobot))
+                return;
+
+            var plcValues = RobotLabels[SelectedRobot]
+                .Select(label=> new PlcObjValue(label, rawData[label.Code]))
+                .OrderBy(obj => obj.Label, DeviceLabel.Comparer.Default)
+                .ToList();
 
             PlcValues.Clear();
             PlcValues.AddRange(plcValues);
