@@ -10,7 +10,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
     /// </summary>
     public class DeviceLabel
     {
-        public DeviceLabel(string code, Device device, int address, DataType dataType = DataType.Number, int length = 1, int? bitPosition = null, GatheringGroup group = null)
+        public DeviceLabel(string code, Device device, int address, DataType dataType = DataType.Number, int length = 1, int? bitPosition = null, GatheringGroup group = null, SubroutineInfo subroutine = null)
         {
             Code = code;
             Device = device;
@@ -33,6 +33,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
             AddressString = device.GetAddressString(Address, BitPosition);
 
             Group = group;
+            Subroutine = subroutine;
         }
 
         /// <summary>
@@ -109,6 +110,11 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         public int DecimalPoint { get; }
 
         /// <summary>
+        /// 서브루틴정보
+        /// </summary>
+        public SubroutineInfo Subroutine { get; }
+
+        /// <summary>
         /// 라벨의 데이터 타입에 맞게 값을 변환한다.
         /// </summary>
         /// <param name="values"></param>
@@ -161,5 +167,37 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         {
             return $"{nameof(DeviceLabel)} {AddressString}";
         }
+
+        public class SubroutineInfo
+        {
+            public SubroutineInfo(string name, SubroutineDetectionType detectionType, bool isStart, bool isEnd)
+            {
+                Name = name;
+                DetectionType = detectionType;
+                IsStart = isStart;
+                IsEnd = isEnd;
+            }
+
+            /// <summary>
+            /// 루틴명
+            /// </summary>
+            public string Name { get; }
+
+            /// <summary>
+            /// 루틴 사이클탐지 유형
+            /// </summary>
+            public SubroutineDetectionType DetectionType { get; }
+
+            /// <summary>
+            /// 루틴의 시작을 알리는 값인가?
+            /// </summary>
+            public bool IsStart { get; }
+
+            /// <summary>
+            /// 루틴의 종료를 알리는 값인가?
+            /// </summary>
+            public bool IsEnd { get; }
+        }
+
     }
 }
