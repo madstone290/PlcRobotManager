@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace PlcRobotManager.Ui
+namespace PlcRobotManager.Ui.Views.Test
 {
     public partial class FormMitsubishiTest : Form
     {

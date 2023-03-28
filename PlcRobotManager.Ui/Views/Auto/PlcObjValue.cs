@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlcRobotManager.Ui
+namespace PlcRobotManager.Ui.Views.Auto
 {
     public class PlcObjValue
     {

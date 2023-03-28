@@ -1,6 +1,6 @@
-﻿namespace PlcRobotManager.Ui
+﻿namespace PlcRobotManager.Ui.Views.Auto
 {
-    partial class FormAutoProcessed
+    partial class FormAutoRaw
     {
         /// <summary>
         /// Required designer variable.

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PlcRobotManager.Ui.Views.Auto;
+using PlcRobotManager.Ui.Views.Test;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;

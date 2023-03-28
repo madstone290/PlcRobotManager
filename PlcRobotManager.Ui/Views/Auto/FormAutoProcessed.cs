@@ -10,19 +10,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PlcRobotManager.Ui
+namespace PlcRobotManager.Ui.Views.Auto
 {
-    public partial class FormAutoRaw : Form
+    public partial class FormAutoProcessed : Form
     {
         private readonly System.Timers.Timer timer = new System.Timers.Timer();
 
-        public FormAutoRaw()
+        public FormAutoProcessed()
         {
             InitializeComponent();
             RobotManager = Program.RobotManager;
         }
 
-        public List<PlcRawValue> PlcValues { get; set; } = new List<PlcRawValue>();
+        public List<PlcObjValue> PlcValues { get; set; } = new List<PlcObjValue>();
         public List<string> Robots { get; set; } = new List<string>();
         public string SelectedRobot { get; set; }
         public IRobotManager RobotManager { get; internal set; }
@@ -68,8 +68,8 @@ namespace PlcRobotManager.Ui
 
         private void RefreshRobotData()
         {
-            var rawData = RobotManager.GetRawRobotData(SelectedRobot);
-            var plcValues = rawData.Select(x => new PlcRawValue(x.Key, x.Value)).OrderBy(x => x.Address);
+            var rawData = RobotManager.GetProcessedRobotData(SelectedRobot);
+            var plcValues = rawData.Select(x => new PlcObjValue(x.Key, x.Value)).OrderBy(x => x.Address);
 
             PlcValues.Clear();
             PlcValues.AddRange(plcValues);

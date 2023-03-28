@@ -1,4 +1,4 @@
-﻿namespace PlcRobotManager.Ui
+﻿namespace PlcRobotManager.Ui.Views.Test
 {
     partial class FormMitsubishiTest
     {
@@ -88,7 +88,7 @@
             // 
             // timeEdit
             // 
-            this.timeEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.timeEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.timeEdit.Location = new System.Drawing.Point(57, 73);
             this.timeEdit.Name = "timeEdit";
@@ -109,7 +109,7 @@
             // 
             // statusEdit
             // 
-            this.statusEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.statusEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.statusEdit.Location = new System.Drawing.Point(57, 41);
             this.statusEdit.Name = "statusEdit";
@@ -120,7 +120,7 @@
             // 
             // msgEdit
             // 
-            this.msgEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.msgEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.msgEdit.Location = new System.Drawing.Point(57, 7);
             this.msgEdit.Name = "msgEdit";

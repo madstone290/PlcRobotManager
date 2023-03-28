@@ -33,9 +33,9 @@
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.미쓰비시ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.자동원본ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.오토ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.수동ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.자동원본ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -54,7 +54,7 @@
             this.미쓰비시ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1384, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -68,32 +68,32 @@
             this.미쓰비시ToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.미쓰비시ToolStripMenuItem.Text = "미쓰비시";
             // 
+            // 자동원본ToolStripMenuItem
+            // 
+            this.자동원본ToolStripMenuItem.Name = "자동원본ToolStripMenuItem";
+            this.자동원본ToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.자동원본ToolStripMenuItem.Text = "자동_원본";
+            this.자동원본ToolStripMenuItem.Click += new System.EventHandler(this.자동원본ToolStripMenuItem_Click);
+            // 
             // 오토ToolStripMenuItem
             // 
             this.오토ToolStripMenuItem.Name = "오토ToolStripMenuItem";
-            this.오토ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.오토ToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.오토ToolStripMenuItem.Text = "자동_가공";
             this.오토ToolStripMenuItem.Click += new System.EventHandler(this.오토ToolStripMenuItem_Click);
             // 
             // 수동ToolStripMenuItem
             // 
             this.수동ToolStripMenuItem.Name = "수동ToolStripMenuItem";
-            this.수동ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.수동ToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.수동ToolStripMenuItem.Text = "수동";
             this.수동ToolStripMenuItem.Click += new System.EventHandler(this.수동ToolStripMenuItem_Click);
-            // 
-            // 자동원본ToolStripMenuItem
-            // 
-            this.자동원본ToolStripMenuItem.Name = "자동원본ToolStripMenuItem";
-            this.자동원본ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.자동원본ToolStripMenuItem.Text = "자동_원본";
-            this.자동원본ToolStripMenuItem.Click += new System.EventHandler(this.자동원본ToolStripMenuItem_Click);
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1384, 661);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
