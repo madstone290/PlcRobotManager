@@ -21,7 +21,7 @@ namespace PlcRobotManager.Util.ExcelUtils
                     var result = reader.AsDataSet();
 
                     // The result of each spreadsheet is in result.Tables
-                    if(result.Tables.Count == 0)
+                    if (result.Tables.Count == 0)
                         return Enumerable.Empty<T>().ToList();
 
                     return DataTableToList<T>(result.Tables[0]);
@@ -51,7 +51,7 @@ namespace PlcRobotManager.Util.ExcelUtils
             foreach (DataColumn column in dataColumns)
             {
                 var caption = headerRow[column].ToString();
-                var header = headers.FirstOrDefault(x=> x.Caption == caption);
+                var header = headers.FirstOrDefault(x => x.Caption == caption);
                 if (header != null)
                     columnIndexes[header] = column.Ordinal;
             }
@@ -70,7 +70,13 @@ namespace PlcRobotManager.Util.ExcelUtils
                     {
                         try
                         {
-                            var properValue = Convert.ChangeType(row[columnIndex], property.PropertyType);
+                            object properValue;
+                            Type underlyingType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                            if (underlyingType.IsEnum)
+                                properValue = Enum.Parse(underlyingType, Convert.ToString(row[columnIndex]), true);
+                            else
+                                properValue = Convert.ChangeType(row[columnIndex], underlyingType);
+
                             property.SetValue(instance, properValue);
                         }
                         catch { } // Failed to change value type 
