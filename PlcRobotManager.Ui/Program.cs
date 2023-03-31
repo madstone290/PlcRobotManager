@@ -1,4 +1,6 @@
 ﻿using PlcRobotManager.Core;
+using PlcRobotManager.Core.Infos;
+using PlcRobotManager.Ui.Inputs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,8 @@ namespace PlcRobotManager.Ui
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ThreadException += Application_ThreadException;
 
-            var robotManager = RobotManagerHelper.RunPredefined().GetAwaiter().GetResult();
+            List<RobotInfo> robotInfos = new RobotFileReader().Read("RobotConfig/robot_list.json");
+            var robotManager = RobotManagerHelper.Run(robotInfos).GetAwaiter().GetResult();
             RobotManager = robotManager;
 
             var form = new FormMain();

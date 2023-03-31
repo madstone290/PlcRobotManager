@@ -42,6 +42,9 @@
     <Reference Include="DevExpress.XtraEditors.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraGrid.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraLayout.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,6 +58,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Inputs\RobotFileReader.cs" />
+    <Compile Include="Inputs\PlcJsonItem.cs" />
+    <Compile Include="Inputs\RobotItem.cs" />
     <Compile Include="Views\Auto\FormAutoRaw.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,6 +122,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -125,6 +132,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="RobotConfig\plc1_labels.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RobotConfig\robot_list.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -133,6 +146,10 @@
     <ProjectReference Include="..\PlcRobotManager.Core\PlcRobotManager.Core.csproj">
       <Project>{01B1824F-4A7C-4C02-8485-7438D39BEB9A}</Project>
       <Name>PlcRobotManager.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlcRobotManager.Util\PlcRobotManager.Util.csproj">
+      <Project>{ADAAC323-D7EB-44C2-8C62-9AE61E52C4CD}</Project>
+      <Name>PlcRobotManager.Util</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

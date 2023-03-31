@@ -1,0 +1,18 @@
+﻿[
+  {
+    "name": "robot #1",
+    "gathererType": "manual",
+    "additionalIdleTime": 5000,
+    "dataLoggingEnabled": true,
+    "dataLoggingCycle": 1,
+    "plcList": [
+      {
+        "name": "plc #1",
+        "actTargetSimulator": 1,
+        "stationNumber": 5000,
+        "labelFilePath": "RobotConfig/plc1_labels.xlsx"
+      }
+    ]
+  }
+
+  ]
