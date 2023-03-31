@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PlcRobotManager.Core
 {
-    public interface IRobot
+    public interface IRobot : ICycleEvent
     {
         /// <summary>
         /// 이름

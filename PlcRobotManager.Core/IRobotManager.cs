@@ -1,4 +1,5 @@
 ﻿using PlcRobotManager.Core.Vendor.Mitsubishi;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +10,10 @@ namespace PlcRobotManager.Core
         IDataManager DataManager { get; set; }
 
         IEnumerable<IRobot> Robots { get; }
+
+        event EventHandler<RobotCycleEventArgs> RobotCycleStarted;
+
+        event EventHandler<RobotCycleEventArgs> RobotCycleEnded;
 
         void SetUp(IEnumerable<IRobot> robots);
 

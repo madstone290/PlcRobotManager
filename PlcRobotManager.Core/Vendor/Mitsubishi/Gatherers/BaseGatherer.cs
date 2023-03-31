@@ -53,6 +53,10 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 
         private readonly List<ISubroutine> _subroutines = new List<ISubroutine>();
 
+        public event EventHandler<CycleEventArgs> CycleStarted;
+
+        public event EventHandler<CycleEventArgs> CycleEnded;
+
         public BaseGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels)
         {
             _plc = plc;
@@ -70,10 +74,14 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 
                 subroutine.CycleStarted += (s, count) =>
                 {
+                    CycleStarted?.Invoke(s, new CycleEventArgs(subroutine.Name, label.Code, count, DateTime.UtcNow));
                     _logger.Debug($"CycleStarted Name:{subroutine.Name} Count:{count}");
+
+                    
                 };
                 subroutine.CycleEnded += (s, count) =>
                 {
+                    CycleEnded?.Invoke(s, new CycleEventArgs(subroutine.Name, label.Code, count, DateTime.UtcNow));
                     _logger.Debug($"CycleEnded Name:{subroutine.Name} Count:{count}");
                 };
             }

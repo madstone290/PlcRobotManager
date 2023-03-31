@@ -93,7 +93,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         /// <summary>
         /// 읽기작업을 진행할 데이터 리더
         /// </summary>
-        private readonly IPlcDataGatherer _plcDataReader;
+        private readonly IPlcDataGatherer _plcDataGatherer;
 
         public MitsubishiRobot(string name, IMitsubishiPlc plc, DataGathererType dataGathererType, IEnumerable<DeviceLabel> deviceLabels)
         {
@@ -108,19 +108,24 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
             switch (dataGathererType)
             {
                 case DataGathererType.Auto:
-                    _plcDataReader = new AutoDataGatherer(plc, deviceLabels); break;
+                    _plcDataGatherer = new AutoDataGatherer(plc, deviceLabels); break;
                 case DataGathererType.Random:
-                    _plcDataReader = new RandomDataGatherer(plc, deviceLabels); break;
+                    _plcDataGatherer = new RandomDataGatherer(plc, deviceLabels); break;
                 case DataGathererType.Manual:
-                    _plcDataReader = new ManualGatherer(plc, deviceLabels); break;
+                    _plcDataGatherer = new ManualGatherer(plc, deviceLabels); break;
                 default:
                     throw new ArgumentException(nameof(dataGathererType));
 
             }
 
+            _plcDataGatherer.CycleStarted += (s, e) => { CycleStarted?.Invoke(s, e); };
+            _plcDataGatherer.CycleEnded += (s, e) => { CycleEnded?.Invoke(s, e); };
+
         }
 
         public event EventHandler<object> Save;
+        public event EventHandler<CycleEventArgs> CycleStarted;
+        public event EventHandler<CycleEventArgs> CycleEnded;
 
         public string Name => _name;
 
@@ -218,7 +223,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         private bool ReadData()
         {
             readStopWatch.Restart();
-            var result = _plcDataReader.Gather();
+            var result = _plcDataGatherer.Gather();
             _logger.Debug($"{_logId} ReadData ElapsedMilliseconds: {readStopWatch.ElapsedMilliseconds}");
             readStopWatch.Reset();
 
@@ -228,8 +233,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
                 return false;
             }
 
-            SetRawData(_plcDataReader.RawData);
-            SetProcessedData(_plcDataReader.ProcessedData);
+            SetRawData(_plcDataGatherer.RawData);
+            SetProcessedData(_plcDataGatherer.ProcessedData);
 
             _totalReadCount++;
 

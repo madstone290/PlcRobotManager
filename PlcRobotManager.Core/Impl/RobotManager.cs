@@ -9,6 +9,9 @@ namespace PlcRobotManager.Core.Impl
     {
         private readonly Dictionary<string, IRobot> _robots = new Dictionary<string, IRobot>();
 
+        public event EventHandler<RobotCycleEventArgs> RobotCycleStarted;
+        public event EventHandler<RobotCycleEventArgs> RobotCycleEnded;
+
         public IDataManager DataManager { get; set; }
 
         public IEnumerable<IRobot> Robots => _robots.Values;
@@ -22,6 +25,14 @@ namespace PlcRobotManager.Core.Impl
                 robot.Save += (sender, data) =>
                 {
                     DataManager.Save(data);
+                };
+                robot.CycleStarted += (sender, cycleEventArgs) =>
+                {
+                    RobotCycleStarted?.Invoke(this, new RobotCycleEventArgs(robot.Name, cycleEventArgs));
+                };
+                robot.CycleEnded += (sender, cycleEventArgs) =>
+                {
+                    RobotCycleEnded?.Invoke(this, new RobotCycleEventArgs(robot.Name, cycleEventArgs));
                 };
             }
         }
