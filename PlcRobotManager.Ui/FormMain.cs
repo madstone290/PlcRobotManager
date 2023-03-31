@@ -39,5 +39,10 @@ namespace PlcRobotManager.Ui
         {
             documentManager1.View.AddDocument(new FormAutoRaw(), "자동_원본");
         }
+
+        private void 사이클타임ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            documentManager1.View.AddDocument(new FormSubroutine(), "사이클타임");
+        }
     }
 }

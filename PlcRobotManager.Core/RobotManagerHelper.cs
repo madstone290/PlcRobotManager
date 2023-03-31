@@ -23,7 +23,7 @@ namespace PlcRobotManager.Core
                     Name = "Robot #1",
                     DataLoggingCycle = 10,
                     DataLoggingEnabled = true,
-                    AdditionalIdleTime = 3 * 1000,
+                    AdditionalIdleTime = 5 * 1000,
                     GathererType = DataGathererType.Manual,
                     PlcInfos = new List<PlcInfo>()
                     {

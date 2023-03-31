@@ -73,6 +73,13 @@
     <Compile Include="FormMain.designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Auto\FormSubroutine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Auto\FormSubroutine.Designer.cs">
+      <DependentUpon>FormSubroutine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Auto\PlcSubroutineValue.cs" />
     <Compile Include="Views\Test\FormMitsubishiTest.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,6 +99,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Auto\FormSubroutine.resx">
+      <DependentUpon>FormSubroutine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Test\FormMitsubishiTest.resx">
       <DependentUpon>FormMitsubishiTest.cs</DependentUpon>
