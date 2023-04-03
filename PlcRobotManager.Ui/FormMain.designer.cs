@@ -35,8 +35,9 @@
             this.미쓰비시ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.자동원본ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.오토ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.수동ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.사이클타임ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.수동ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.값변경로그ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -65,6 +66,7 @@
             this.자동원본ToolStripMenuItem,
             this.오토ToolStripMenuItem,
             this.사이클타임ToolStripMenuItem,
+            this.값변경로그ToolStripMenuItem,
             this.수동ToolStripMenuItem});
             this.미쓰비시ToolStripMenuItem.Name = "미쓰비시ToolStripMenuItem";
             this.미쓰비시ToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
@@ -84,6 +86,13 @@
             this.오토ToolStripMenuItem.Text = "자동_가공";
             this.오토ToolStripMenuItem.Click += new System.EventHandler(this.오토ToolStripMenuItem_Click);
             // 
+            // 사이클타임ToolStripMenuItem
+            // 
+            this.사이클타임ToolStripMenuItem.Name = "사이클타임ToolStripMenuItem";
+            this.사이클타임ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.사이클타임ToolStripMenuItem.Text = "사이클타임";
+            this.사이클타임ToolStripMenuItem.Click += new System.EventHandler(this.사이클타임ToolStripMenuItem_Click);
+            // 
             // 수동ToolStripMenuItem
             // 
             this.수동ToolStripMenuItem.Name = "수동ToolStripMenuItem";
@@ -91,12 +100,12 @@
             this.수동ToolStripMenuItem.Text = "수동";
             this.수동ToolStripMenuItem.Click += new System.EventHandler(this.수동ToolStripMenuItem_Click);
             // 
-            // 사이클타임ToolStripMenuItem
+            // 값변경로그ToolStripMenuItem
             // 
-            this.사이클타임ToolStripMenuItem.Name = "사이클타임ToolStripMenuItem";
-            this.사이클타임ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.사이클타임ToolStripMenuItem.Text = "사이클타임";
-            this.사이클타임ToolStripMenuItem.Click += new System.EventHandler(this.사이클타임ToolStripMenuItem_Click);
+            this.값변경로그ToolStripMenuItem.Name = "값변경로그ToolStripMenuItem";
+            this.값변경로그ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.값변경로그ToolStripMenuItem.Text = "값변경로그";
+            this.값변경로그ToolStripMenuItem.Click += new System.EventHandler(this.값변경로그ToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -126,5 +135,6 @@
         private System.Windows.Forms.ToolStripMenuItem 수동ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 자동원본ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 사이클타임ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 값변경로그ToolStripMenuItem;
     }
 }

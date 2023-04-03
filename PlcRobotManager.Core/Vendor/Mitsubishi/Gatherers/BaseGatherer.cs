@@ -144,7 +144,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             ProcessValue();
 
             // 서브루틴 상태 갱신
-            foreach(ISubroutine subroutine in _subroutines)
+            foreach (ISubroutine subroutine in _subroutines)
                 subroutine.CheckCycle(_processedData);
 
             return Result.Success();
@@ -152,24 +152,19 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 
         private void ProcessValue()
         {
-            _processedData.Clear();
             IEnumerable<IRange> entireRanges = BlockRanges.Cast<IRange>().Concat(RandomRanges.Cast<IRange>());
             foreach (IRange range in entireRanges)
             {
                 foreach (var label in range.OrderedDeviceLabels)
                 {
                     List<short> rawValues = label.AddressStringList.Select(address => _rawData[address]).ToList();
-                    if (label.RaiseValueEvent)
+                    object newValue = label.ConvertValue(rawValues);
+                    if (label.RaiseValueEvent && _processedData.TryGetValue(label.Code, out object prevValue)) // 최초 조회에는 값변경 이벤트 발생시키지 않음
                     {
-                        _processedData.TryGetValue(label.Code, out object prev);
-                        _processedData[label.Code] = label.ConvertValue(rawValues);
-                        if(!_processedData[label.Code].Equals(prev))
-                            ValueChanged?.Invoke(this, new ValueChangeEventArgs(label.Code, prev, _processedData[label.Code], DateTime.UtcNow));
+                        if (!newValue.Equals(prevValue))
+                            ValueChanged?.Invoke(this, new ValueChangeEventArgs(label.Code, prevValue, newValue, DateTime.UtcNow));
                     }
-                    else
-                    {
-                        _processedData[label.Code] = label.ConvertValue(rawValues);
-                    }
+                    _processedData[label.Code] = newValue;
                 }
             }
 

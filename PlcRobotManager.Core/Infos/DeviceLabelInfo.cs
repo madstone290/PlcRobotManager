@@ -10,6 +10,7 @@ namespace PlcRobotManager.Core.Infos
         public DataType DataType { get; set; }
         public int Length { get; set; } = 1;
         public int? BitPosition { get; set; }
+        public bool RaiseValueEvent { get; set; }
 
         #region GatheringGroup
         /// <summary>

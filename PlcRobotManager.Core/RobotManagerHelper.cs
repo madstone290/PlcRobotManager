@@ -169,6 +169,7 @@ namespace PlcRobotManager.Core
                         dataType: label.DataType,
                         length: label.Length,
                         bitPosition: label.BitPosition,
+                        raiseValueEvent: label.RaiseValueEvent,
                         group: groups.FirstOrDefault(group => group.Name == label.GatheringGroupName),
                         subroutine: string.IsNullOrWhiteSpace(label.SubroutineName)
                             ? null

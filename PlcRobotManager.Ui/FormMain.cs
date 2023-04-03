@@ -44,5 +44,10 @@ namespace PlcRobotManager.Ui
         {
             documentManager1.View.AddDocument(new FormSubroutine(), "사이클타임");
         }
+
+        private void 값변경로그ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            documentManager1.View.AddDocument(new FormChangeLog(), "값변경로그");
+        }
     }
 }
