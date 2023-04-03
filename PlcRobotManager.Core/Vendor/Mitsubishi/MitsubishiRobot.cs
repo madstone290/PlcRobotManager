@@ -118,14 +118,16 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
 
             }
 
-            _plcDataGatherer.CycleStarted += (s, e) => { CycleStarted?.Invoke(s, e); };
-            _plcDataGatherer.CycleEnded += (s, e) => { CycleEnded?.Invoke(s, e); };
-
+            _plcDataGatherer.CycleStarted += (s, e) => CycleStarted?.Invoke(s, e);
+            _plcDataGatherer.CycleEnded += (s, e) => CycleEnded?.Invoke(s, e);
+            _plcDataGatherer.ValueChanged += (s, e) => ValueChanged?.Invoke(s, e);
+        
         }
 
         public event EventHandler<object> Save;
         public event EventHandler<CycleEventArgs> CycleStarted;
         public event EventHandler<CycleEventArgs> CycleEnded;
+        public event EventHandler<ValueChangeEventArgs> ValueChanged;
 
         public string Name => _name;
 

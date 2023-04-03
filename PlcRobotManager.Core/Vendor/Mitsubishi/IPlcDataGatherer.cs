@@ -6,7 +6,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
     /// <summary>
     /// PLC 데이터를 수집한다
     /// </summary>
-    public interface IPlcDataGatherer : ICycleEvent
+    public interface IPlcDataGatherer : ICycleEvent, IValueEvent
     {
         /// <summary>
         /// 주소/값 사전

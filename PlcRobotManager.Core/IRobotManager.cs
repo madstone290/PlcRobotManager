@@ -15,6 +15,8 @@ namespace PlcRobotManager.Core
 
         event EventHandler<RobotCycleEventArgs> RobotCycleEnded;
 
+        event EventHandler<RobotValueEventArgs> RobotValueChanged;
+
         void SetUp(IEnumerable<IRobot> robots);
 
         Task RunAsync();

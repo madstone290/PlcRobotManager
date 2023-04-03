@@ -10,13 +10,15 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
     /// </summary>
     public class DeviceLabel
     {
-        public DeviceLabel(string code, Device device, int address, DataType dataType = DataType.Number, int length = 1, int? bitPosition = null, GatheringGroup group = null, SubroutineInfo subroutine = null)
+        public DeviceLabel(string code, Device device, int address, DataType dataType = DataType.Number, 
+            int length = 1, int? bitPosition = null, bool raiseValueEvent = false, GatheringGroup group = null, SubroutineInfo subroutine = null)
         {
             Code = code;
             Device = device;
             Address = address;
             DataType = dataType;
             Length = length < 1 ? 1 : length;
+            RaiseValueEvent = raiseValueEvent;
 
             if (device.IsBit())
             {
@@ -95,11 +97,6 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         public int Length { get; } = 1;
 
         /// <summary>
-        /// 수집 그룹. 매뉴얼 방식으로 데이터를 수집할 때 적용된다.
-        /// </summary>
-        public GatheringGroup Group { get; }
-
-        /// <summary>
         /// 라벨의 값이 비트값인가?
         /// </summary>
         public bool IsBitValue => Device.IsBit() || BitPosition.HasValue;
@@ -108,6 +105,16 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         /// 숫자 변환에 적용할 소수점 위치
         /// </summary>
         public int DecimalPoint { get; }
+
+        /// <summary>
+        /// 값 변경시 이벤트 발생여부
+        /// </summary>
+        public bool RaiseValueEvent { get; set; }
+
+        /// <summary>
+        /// 수집 그룹. 매뉴얼 방식으로 데이터를 수집할 때 적용된다.
+        /// </summary>
+        public GatheringGroup Group { get; }
 
         /// <summary>
         /// 서브루틴정보

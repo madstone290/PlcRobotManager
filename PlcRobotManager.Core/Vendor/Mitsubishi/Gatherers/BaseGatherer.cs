@@ -53,23 +53,19 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 
         private readonly List<ISubroutine> _subroutines = new List<ISubroutine>();
 
-        public event EventHandler<CycleEventArgs> CycleStarted;
-
-        public event EventHandler<CycleEventArgs> CycleEnded;
-
         public BaseGatherer(IMitsubishiPlc plc, IEnumerable<DeviceLabel> deviceLabels)
         {
             _plc = plc;
-            _deviceLabels.AddRange(deviceLabels.OrderBy(x=> x, DeviceLabel.Comparer.Default));
+            _deviceLabels.AddRange(deviceLabels.OrderBy(x => x, DeviceLabel.Comparer.Default));
             _wordBlockReader = new WordBlockReader(plc);
             _bitBlockReader = new BitBlockReader(plc);
             _randomReader = new RandomReader(plc);
 
             var subroutineLabels = _deviceLabels.Where(x => x.Subroutine != null);
             // ** 싱글서브루틴만 적용. 복합서브루틴은 미적용.
-            foreach(var label in subroutineLabels)
+            foreach (var label in subroutineLabels)
             {
-                 ISubroutine subroutine = _subroutineFactory.Create(label.Subroutine.DetectionType, label.Subroutine.Name, label.Code);
+                ISubroutine subroutine = _subroutineFactory.Create(label.Subroutine.DetectionType, label.Subroutine.Name, label.Code);
                 _subroutines.Add(subroutine);
 
                 subroutine.CycleStarted += (s, count) =>
@@ -77,7 +73,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
                     CycleStarted?.Invoke(s, new CycleEventArgs(subroutine.Name, label.Code, count, DateTime.UtcNow));
                     _logger.Debug($"CycleStarted Name:{subroutine.Name} Count:{count}");
 
-                    
+
                 };
                 subroutine.CycleEnded += (s, count) =>
                 {
@@ -87,6 +83,14 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             }
 
         }
+
+        protected BaseGatherer()
+        {
+        }
+
+        public event EventHandler<CycleEventArgs> CycleStarted;
+        public event EventHandler<CycleEventArgs> CycleEnded;
+        public event EventHandler<ValueChangeEventArgs> ValueChanged;
 
         /// <summary>
         /// 블록읽기 목록
@@ -155,7 +159,17 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
                 foreach (var label in range.OrderedDeviceLabels)
                 {
                     List<short> rawValues = label.AddressStringList.Select(address => _rawData[address]).ToList();
-                    _processedData[label.Code] = label.ConvertValue(rawValues);
+                    if (label.RaiseValueEvent)
+                    {
+                        _processedData.TryGetValue(label.Code, out object prev);
+                        _processedData[label.Code] = label.ConvertValue(rawValues);
+                        if(!_processedData[label.Code].Equals(prev))
+                            ValueChanged?.Invoke(this, new ValueChangeEventArgs(label.Code, prev, _processedData[label.Code], DateTime.UtcNow));
+                    }
+                    else
+                    {
+                        _processedData[label.Code] = label.ConvertValue(rawValues);
+                    }
                 }
             }
 

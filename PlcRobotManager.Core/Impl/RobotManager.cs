@@ -11,6 +11,7 @@ namespace PlcRobotManager.Core.Impl
 
         public event EventHandler<RobotCycleEventArgs> RobotCycleStarted;
         public event EventHandler<RobotCycleEventArgs> RobotCycleEnded;
+        public event EventHandler<RobotValueEventArgs> RobotValueChanged;
 
         public IDataManager DataManager { get; set; }
 
@@ -22,18 +23,13 @@ namespace PlcRobotManager.Core.Impl
             foreach (var robot in robots)
             {
                 _robots.Add(robot.Name, robot);
-                robot.Save += (sender, data) =>
+                robot.Save += (s, data) =>
                 {
                     DataManager.Save(data);
                 };
-                robot.CycleStarted += (sender, cycleEventArgs) =>
-                {
-                    RobotCycleStarted?.Invoke(this, new RobotCycleEventArgs(robot.Name, cycleEventArgs));
-                };
-                robot.CycleEnded += (sender, cycleEventArgs) =>
-                {
-                    RobotCycleEnded?.Invoke(this, new RobotCycleEventArgs(robot.Name, cycleEventArgs));
-                };
+                robot.CycleStarted += (s, cycleEventArgs) => RobotCycleStarted?.Invoke(this, new RobotCycleEventArgs(robot.Name, cycleEventArgs));
+                robot.CycleEnded += (s, cycleEventArgs) => RobotCycleEnded?.Invoke(this, new RobotCycleEventArgs(robot.Name, cycleEventArgs));
+                robot.ValueChanged += (s, valueEventArgs) => RobotValueChanged?.Invoke(this, new RobotValueEventArgs(robot.Name, valueEventArgs));
             }
         }
 

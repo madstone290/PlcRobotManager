@@ -58,6 +58,7 @@
     <Compile Include="Infos\DeviceLabelInfo.cs" />
     <Compile Include="Infos\PlcInfo.cs" />
     <Compile Include="Infos\RobotInfo.cs" />
+    <Compile Include="IValueEvent.cs" />
     <Compile Include="RobotCycleEventArgs.cs" />
     <Compile Include="RobotManagerHelper.cs" />
     <Compile Include="IDataManager.cs" />
@@ -72,6 +73,8 @@
     <Compile Include="Result.cs" />
     <Compile Include="CycleEventArgs.cs" />
     <Compile Include="ICycleEvent.cs" />
+    <Compile Include="RobotValueEventArgs.cs" />
+    <Compile Include="ValueChangeEventArgs.cs" />
     <Compile Include="Vendor\Mitsubishi\DataGathererType.cs" />
     <Compile Include="Vendor\Mitsubishi\DataType.cs" />
     <Compile Include="Vendor\Mitsubishi\Device.cs" />
