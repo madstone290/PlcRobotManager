@@ -8,11 +8,13 @@
     "plcList": [
       {
         "name": "plc #1",
-        "actTargetSimulator": 1,
-        "stationNumber": 5000,
-        "labelFilePath": "RobotConfig/plc1_labels.xlsx"
+        "labelFilePath": "RobotConfig/plc1_labels.xlsx",
+        "progOptions": {
+          "communicationType": "GXSimulator2",
+          "actTargetSimulator": 1
+        }
       }
     ]
   }
 
-  ]
+]

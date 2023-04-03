@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PlcRobotManager.Core.Vendor.Mitsubishi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,14 +12,11 @@ namespace PlcRobotManager.Core.Infos
         public static PlcInfo Test { get; } = new PlcInfo()
         {
             Name = "Test PLC",
-            StationNumber = 1
         };
 
         public string Name { get; set; }
 
-        public int ActTargetSimulator { get; set; } = 1;
-
-        public int StationNumber { get; set; } = 1;
+        public ProgOptions ProgOptions { get; set; }
 
         public List<DeviceLabelInfo> DeviceLabelInfos { get; set; } = new List<DeviceLabelInfo>();
     }

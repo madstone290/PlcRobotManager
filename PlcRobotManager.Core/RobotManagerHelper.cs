@@ -30,7 +30,7 @@ namespace PlcRobotManager.Core
                         new PlcInfo()
                         {
                             Name = "Plc #1",
-                            ActTargetSimulator = 1,
+                            ProgOptions = new ProgOptions(){ ActTargetSimulator = 1 },
                             DeviceLabelInfos = new List<DeviceLabelInfo>()
                             {
                                 new DeviceLabelInfo() // 공정1
@@ -108,7 +108,7 @@ namespace PlcRobotManager.Core
                                     GatheringGroupName = "GroupR",
                                     GatheringGroupRangeType = RangeType.Random,
                                 }))
-                            .Concat(StepRange.For(0, 100).Select(i => 
+                            .Concat(StepRange.For(0, 100).Select(i =>
                                 new DeviceLabelInfo()
                                 {
                                     Code = getUniqueId(),
@@ -150,10 +150,7 @@ namespace PlcRobotManager.Core
                 PlcInfo plcInfo = robotInfo.PlcInfos.First();
                 if (!plcCache.TryGetValue(plcInfo.Name, out IMitsubishiPlc plc))
                 {
-                    plc = new MitsubishiPlc(plcInfo.Name, new ProgOptions()
-                    {
-                        ActTargetSimulator = plcInfo.ActTargetSimulator,
-                    });
+                    plc = new MitsubishiPlc(plcInfo.Name, plcInfo.ProgOptions);
                     plcCache.Add(plcInfo.Name, plc);
                 }
 

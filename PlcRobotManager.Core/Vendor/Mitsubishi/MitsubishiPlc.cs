@@ -36,12 +36,12 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         public MitsubishiPlc(string name, ProgOptions options)
         {
             _name = name;
-            _options = options;
+            _options = options.Validate();
             _logId = $"[MitsubishiPlc:{_name}]";
         }
 
         public string Name => _name;
-    
+
         /// <summary>
         /// 초기화 작업을 수행한다.
         /// STA스레드 안에서 호출되어야 한다.
@@ -54,6 +54,23 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
             _progModule.ActTargetSimulator = _options.ActTargetSimulator;
             _progModule.ActUnitType = _options.ActUnitType;
             _progModule.ActProtocolType = _options.ActProtocolType;
+            _progModule.ActHostAddress = _options.ActHostAddress;
+            _progModule.ActDestinationPortNumber = _options.ActDestinationPortNumber;
+            _progModule.ActNetworkNumber = _options.ActNetworkNumber;
+            _progModule.ActStationNumber = _options.ActStationNumber;
+            _progModule.ActSourceNetworkNumber = _options.ActSourceNetworkNumber;
+            _progModule.ActSourceStationNumber = _options.ActSourceStationNumber;
+            _progModule.ActCpuType = _options.ActCpuType;
+            _progModule.ActTimeOut = _options.ActTimeOut;
+            _progModule.ActConnectUnitNumber = _options.ActConnectUnitNumber;
+            _progModule.ActDestinationIONumber = _options.ActDestinationIONumber;
+            _progModule.ActDidPropertyBit = _options.ActDidPropertyBit;
+            _progModule.ActDsidPropertyBit = _options.ActDsidPropertyBit;
+            _progModule.ActIONumber = _options.ActIONumber;
+            _progModule.ActMultiDropChannelNumber = _options.ActMultiDropChannelNumber;
+            _progModule.ActPassword = _options.ActPassword;
+            _progModule.ActThroughNetworkType = _options.ActThroughNetworkType;
+            _progModule.ActUnitNumber = _options.ActUnitNumber;
         }
 
         public Result Open()
@@ -83,8 +100,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
             var data = new short[length];
             var code = _progModule.ReadDeviceBlock2(startAddress, length, out data[0]);
             _msgModule.GetErrorMessage(code, out string message);
-            
-            _logger?.Debug($"{_logId} result of 'ReadBlock2': {code==0}");
+
+            _logger?.Debug($"{_logId} result of 'ReadBlock2': {code == 0}");
 
             return new Result<short[]>()
             {
@@ -126,6 +143,6 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
             };
         }
 
-  
+
     }
 }

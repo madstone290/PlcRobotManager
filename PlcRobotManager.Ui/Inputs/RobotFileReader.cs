@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using PlcRobotManager.Core.Infos;
+using PlcRobotManager.Core.Vendor.Mitsubishi;
 using PlcRobotManager.Util.ExcelUtils;
 using System;
 using System.Collections.Generic;
@@ -40,13 +41,12 @@ namespace PlcRobotManager.Ui.Inputs
 
                 foreach (var plc in robotItem.PlcList)
                 {
-                    var plcInfo = new PlcInfo()
+                    var plcInfo = new PlcInfo
                     {
                         Name = plc.Name,
-                        ActTargetSimulator = plc.ActTargetSimulator,
-                        StationNumber = plc.StationNumber,
+                        ProgOptions = plc.ProgOptions,
+                        DeviceLabelInfos = excelService.Read<DeviceLabelInfo>(plc.LabelFilePath)
                     };
-                    plcInfo.DeviceLabelInfos = excelService.Read<DeviceLabelInfo>(plc.LabelFilePath);
 
                     robotInfo.PlcInfos.Add(plcInfo);
                 }

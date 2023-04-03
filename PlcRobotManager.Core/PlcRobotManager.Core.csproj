@@ -75,6 +75,7 @@
     <Compile Include="ICycleEvent.cs" />
     <Compile Include="RobotValueEventArgs.cs" />
     <Compile Include="ValueChangeEventArgs.cs" />
+    <Compile Include="Vendor\Mitsubishi\CommunicationType.cs" />
     <Compile Include="Vendor\Mitsubishi\DataGathererType.cs" />
     <Compile Include="Vendor\Mitsubishi\DataType.cs" />
     <Compile Include="Vendor\Mitsubishi\Device.cs" />
