@@ -15,14 +15,14 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Subroutines
     public class StartFlagSubroutine : ISubroutine
     {
         /// <summary>
-        /// 사이클 상태 확인을 위한 키
-        /// </summary>
-        private readonly string _flagKey;
-
-        /// <summary>
         /// 서브루틴명
         /// </summary>
         private readonly string _name;
+
+        /// <summary>
+        /// 사이클 상태 확인을 위한 키
+        /// </summary>
+        private readonly string _flagCode;
 
         /// <summary>
         /// 서브루틴 사이클 카운트
@@ -39,23 +39,24 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Subroutines
         /// </summary>
         private bool _isFirstCylce = true;
 
-        public StartFlagSubroutine(string name, string flagKey, int initialCount = 1)
+        public StartFlagSubroutine(string name, string flagCode, int initialCount = 1)
         {
-
             _name = name;
-            _flagKey = flagKey;
+            _flagCode = flagCode;
             _cycleCount = initialCount;
         }
 
         public string Name => _name;
         public SubroutineDetectionType DetectionType => SubroutineDetectionType.StartFlag;
         public int CycleCount => _cycleCount;
+        public List<string> Codes => new List<string>() { _flagCode };
+
         public event EventHandler<int> CycleStarted;
         public event EventHandler<int> CycleEnded;
 
         public void CheckCycle(IReadOnlyDictionary<string, object> data)
         {
-            if (!data.TryGetValue(_flagKey, out object value))
+            if (!data.TryGetValue(_flagCode, out object value))
                 return;
 
             bool startFlag = SafeConvert.ToBoolean(value);

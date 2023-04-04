@@ -4,6 +4,7 @@ using PlcRobotManager.Core.Vendor.Mitsubishi.Subroutines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 
 namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
 {
@@ -61,27 +62,20 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
             _bitBlockReader = new BitBlockReader(plc);
             _randomReader = new RandomReader(plc);
 
-            var subroutineLabels = _deviceLabels.Where(x => x.Subroutine != null);
-            // ** 싱글서브루틴만 적용. 복합서브루틴은 미적용.
-            foreach (var label in subroutineLabels)
+            List<ISubroutine> subroutines = _subroutineFactory.Create(_deviceLabels.Where(x => x.Subroutine != null));
+            foreach(ISubroutine subroutine in subroutines)
             {
-                ISubroutine subroutine = _subroutineFactory.Create(label.Subroutine.DetectionType, label.Subroutine.Name, label.Code);
-                _subroutines.Add(subroutine);
-
                 subroutine.CycleStarted += (s, count) =>
                 {
-                    CycleStarted?.Invoke(s, new CycleEventArgs(subroutine.Name, label.Code, count, DateTime.UtcNow));
+                    CycleStarted?.Invoke(s, new CycleEventArgs(subroutine.Name, subroutine.Codes, count, DateTime.UtcNow));
                     _logger.Debug($"CycleStarted Name:{subroutine.Name} Count:{count}");
-
-
                 };
                 subroutine.CycleEnded += (s, count) =>
                 {
-                    CycleEnded?.Invoke(s, new CycleEventArgs(subroutine.Name, label.Code, count, DateTime.UtcNow));
+                    CycleEnded?.Invoke(s, new CycleEventArgs(subroutine.Name, subroutine.Codes, count, DateTime.UtcNow));
                     _logger.Debug($"CycleEnded Name:{subroutine.Name} Count:{count}");
                 };
             }
-
         }
 
         protected BaseGatherer()

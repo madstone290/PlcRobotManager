@@ -14,6 +14,11 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi
         string Name { get; }
 
         /// <summary>
+        /// 서브루틴 사이클판단에 사용할 라벨코드
+        /// </summary>
+        List<string> Codes { get; }
+
+        /// <summary>
         /// 사이클 탐지 유형
         /// </summary>
         SubroutineDetectionType DetectionType { get; }

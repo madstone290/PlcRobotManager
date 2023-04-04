@@ -42,7 +42,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Subroutines
         /// <summary>
         /// PLC 사이클타임값 확인을 위한 키
         /// </summary>
-        private readonly string _cycleTimeKey;
+        private readonly string _cycleTimeCode;
 
         /// <summary>
         /// 루틴 작업진행 상태
@@ -51,10 +51,10 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Subroutines
 
         private bool _isFirstCylce = true;
 
-        public CycleTimeSubroutine(string name, string cycleTimeKey, int initialCount = 1)
+        public CycleTimeSubroutine(string name, string cycleTimeCode, int initialCount = 1)
         {
             _name = name;
-            _cycleTimeKey = cycleTimeKey;
+            _cycleTimeCode = cycleTimeCode;
             _cycleCount = initialCount;
         }
 
@@ -62,12 +62,14 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Subroutines
         public string Name => _name;
         public SubroutineDetectionType DetectionType => SubroutineDetectionType.CycleTime;
         public int CycleCount => _cycleCount;
+        public List<string> Codes => new List<string>() { _cycleTimeCode };
+
         public event EventHandler<int> CycleStarted;
         public event EventHandler<int> CycleEnded;
 
         public void CheckCycle(IReadOnlyDictionary<string, object> data)
         {
-            if (!data.TryGetValue(_cycleTimeKey, out object value))
+            if (!data.TryGetValue(_cycleTimeCode, out object value))
                 return;
 
             if (!double.TryParse(Convert.ToString(value), out double cycleTime))

@@ -13,19 +13,19 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Subroutines
     public class StartEndFlagSubroutine : ISubroutine
     {
         /// <summary>
+        /// 서브루틴명
+        /// </summary>
+        private readonly string _name;
+
+        /// <summary>
         /// 시작비트 키
         /// </summary>
-        private readonly string _startFlagKey;
+        private readonly string _startFlagCode;
 
         /// <summary>
         /// 종료비트 키
         /// </summary>
-        private readonly string _endFlagKey;
-
-        /// <summary>
-        /// 서브루틴명
-        /// </summary>
-        private readonly string _name;
+        private readonly string _endFlagCode;
 
         /// <summary>
         /// 서브루틴 사이클 카운트
@@ -47,25 +47,28 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Subroutines
         /// </summary>
         private bool _isFirstCylce = true;
 
-        public StartEndFlagSubroutine(string startFlagKey, string endFlagKey, string name, int initialCount = 1)
+        public StartEndFlagSubroutine(string name, string startFlagCode, string endFlagCode, int initialCount = 1)
         {
-            _startFlagKey = startFlagKey;
-            _endFlagKey = endFlagKey;
             _name = name;
+            _startFlagCode = startFlagCode;
+            _endFlagCode = endFlagCode;
             _cycleCount = initialCount;
         }
 
         public string Name => _name;
         public SubroutineDetectionType DetectionType => SubroutineDetectionType.StartEndFlag;
         public int CycleCount => _cycleCount;
+
+        public List<string> Codes => new List<string>() { _startFlagCode, _endFlagCode };
+
         public event EventHandler<int> CycleStarted;
         public event EventHandler<int> CycleEnded;
 
         public void CheckCycle(IReadOnlyDictionary<string, object> data)
         {
-            if (!data.TryGetValue(_startFlagKey, out object startValue))
+            if (!data.TryGetValue(_startFlagCode, out object startValue))
                 return;
-            if (!data.TryGetValue(_endFlagKey, out object endValue))
+            if (!data.TryGetValue(_endFlagCode, out object endValue))
                 return;
 
             bool startFlag = SafeConvert.ToBoolean(startValue);
