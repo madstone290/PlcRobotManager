@@ -52,6 +52,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Subroutines
                     subroutine = Create(detectionType, subroutineName, 
                         new string[] { group.First(x=> x.Subroutine.IsStart).Code, group.First(x => x.Subroutine.IsEnd).Code });
                 }
+                subroutines.Add(subroutine);
             }
             return subroutines;
         }

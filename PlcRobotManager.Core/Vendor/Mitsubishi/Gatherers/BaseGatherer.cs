@@ -76,6 +76,7 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Gatherers
                     _logger.Debug($"CycleEnded Name:{subroutine.Name} Count:{count}");
                 };
             }
+            _subroutines.AddRange(subroutines);
         }
 
         protected BaseGatherer()
