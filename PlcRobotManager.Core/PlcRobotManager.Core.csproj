@@ -103,6 +103,7 @@
     <Compile Include="Vendor\Mitsubishi\ISubroutine.cs" />
     <Compile Include="Vendor\Mitsubishi\SubroutineDetectionType.cs" />
     <Compile Include="Vendor\Mitsubishi\Subroutines\CycleTimeSubroutine.cs" />
+    <Compile Include="Vendor\Mitsubishi\Subroutines\StartFlagSubroutine.cs" />
     <Compile Include="Vendor\Mitsubishi\Subroutines\SubroutineFactory.cs" />
   </ItemGroup>
   <ItemGroup>

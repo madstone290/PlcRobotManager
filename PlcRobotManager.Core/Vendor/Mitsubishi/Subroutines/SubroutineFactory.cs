@@ -13,6 +13,8 @@ namespace PlcRobotManager.Core.Vendor.Mitsubishi.Subroutines
             {
                 case SubroutineDetectionType.CycleTime:
                     return new CycleTimeSubroutine(name, dictKey, initCount);
+                case SubroutineDetectionType.StartFlag:
+                    return new StartFlagSubroutine(name, dictKey, initCount);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(detectionType));
             }
