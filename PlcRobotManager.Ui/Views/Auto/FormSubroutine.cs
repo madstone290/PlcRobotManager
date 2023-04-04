@@ -110,7 +110,9 @@ namespace PlcRobotManager.Ui.Views.Auto
                     .Select(x => new PlcSubroutineValue()
                     {
                         Name = x.Subroutine.Name
-                    });
+                    })
+                    .GroupBy(x=> x.Name)
+                    .Select(g=> g.First());
                 PlcValues.AddRange(subroutines);
             }
         }
